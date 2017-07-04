@@ -1,0 +1,23 @@
+﻿@model IEnumerable<Task_1.Models.Subnet>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <script src="~/Scripts/jquery-3.1.1.js" type="text/javascript"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script src="~/Scripts/Index.js"></script>
+    <link href="~/content/DataTables/css/jquery.dataTables.css" rel="stylesheet" />
+</head>
+<div id="table_wrapper">
+    <table id="subnetTable" class="display" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Идентификатор</th>
+                <th>Сеть</th>
+            </tr>
+        </thead>
+    </table>
+</div>
