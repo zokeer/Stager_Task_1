@@ -9,7 +9,7 @@ namespace Task_1.Models
 {
     public class FileRepository : IRepository
     {
-        public readonly string repository_path;
+        private readonly string repository_path;
 
         public FileRepository(string repository_path)
         {
@@ -23,7 +23,12 @@ namespace Task_1.Models
 
         public void Delete(string id)
         {
-            throw new NotImplementedException();
+            var subnets = GetData();
+            subnets.Remove(subnets.Find(subnet => subnet.Id == id));
+            File.WriteAllText(repository_path,
+                JsonConvert.SerializeObject(
+                    subnets.Select(subnet => $"{subnet.Id},{subnet.Address}/{subnet.Mask}"
+                    )));
         }
 
         public void Edit(string id, string data)
@@ -31,11 +36,11 @@ namespace Task_1.Models
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Subnet> GetData()
+        public List<Subnet> GetData()
         {
-            //var data = File.ReadAllText(repository_path);
-            //return JsonConvert.DeserializeObject<IEnumerable<Subnet>>(data);
-            return new List<Subnet>() { new Subnet("23,22.22.22.22/12"), new Subnet("1,1.1.1.1/1"), new Subnet("2,2.2.2.2/2") };
+            var data = File.ReadAllText(repository_path);
+            return JsonConvert.DeserializeObject<IEnumerable<string>>(data)
+                .Select(raw_subnet => new Subnet(raw_subnet)).ToList();
         }
     }
 }

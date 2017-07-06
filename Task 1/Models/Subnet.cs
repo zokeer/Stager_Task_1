@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Net;
+﻿using System.Net;
 
 namespace Task_1.Models
 {
     public class Subnet
     {
-        public string Id { get; set; }
-        public IPAddress Address { get; set; }
-        public IPAddress Mask { get; set; }
+        public string Id { get; }
+        public IPAddress Address { get; }
+        public IPAddress Mask { get; }
 
-        public Subnet(string subnet_string)
+        public Subnet(string raw_subnet)
         {
-            var splitted_tuple = subnet_string.Split(',');
-            Id = splitted_tuple[0];
-            Address = IPAddress.Parse(splitted_tuple[1].Split('/')[0]);
-            Mask = IPAddress.Parse(splitted_tuple[1].Split('/')[1]);
+            var splitted_token = raw_subnet.Split(',');
+            Id = splitted_token[0];
+            Address = IPAddress.Parse(splitted_token[1].Split('/')[0]);
+            Mask = IPAddress.Parse(splitted_token[1].Split('/')[1]);
         }
     }
 }

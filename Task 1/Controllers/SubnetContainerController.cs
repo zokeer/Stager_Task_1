@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Task_1.Models;
 
@@ -15,8 +13,8 @@ namespace Task_1.Controllers
         
         public SubnetContainerController()
         {
-            var repository = new FileRepository("placeholder");
-            _normalizeSubnetName = (id, mask) => string.Format("{0}/{1}", id, mask);
+            var repository = new FileRepository(@"C:\Users\Дмитрий\Source\Repos\Stager_Task_1\Task 1\test.txt");
+            _normalizeSubnetName = (id, mask) => $"{id}/{mask}";
             _subnetContainerManager = new SubnetContainerManager(repository);
         }        
 
@@ -30,34 +28,39 @@ namespace Task_1.Controllers
         public ActionResult Get()
         {
             var subnets =_subnetContainerManager.Get();
-            IEnumerable<object> masked_subnets = subnets.Select(subnet => new
+            IEnumerable<object> masked_subnets = subnets.Select((subnet, index) => new
             {
-                Id = subnet.Id,
-                MaskedAddress = _normalizeSubnetName(subnet.Address.ToString(), subnet.Mask.ToString())
-            });
+                subnet.Id,
+                MaskedAddress = _normalizeSubnetName(subnet.Address.ToString(), subnet.Mask.ToString()),
+                DT_RowId = subnet.Id
 
-            return Json(new { data = masked_subnets }, JsonRequestBehavior.AllowGet);
+            });
+            var subnets_amount = masked_subnets.ToArray().Length;
+            return Json(new { data = masked_subnets,
+                recordsTotal = subnets_amount,
+                recordsFiltered = subnets_amount
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddSubnet(string id, string address, string mask)
         {
             _subnetContainerManager.Create(id + ',' + address + '/' + mask);
-            return this.Get();
+            return Get();
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult DeleteSubnet(string id)
         {
             _subnetContainerManager.Delete(id);
-            return this.Get();
+            return Get();
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditSubnet(string id, string address, string mask)
         {
-            _subnetContainerManager.Create(id + ',' + address + '/' + mask);
-            return this.Get();
+            _subnetContainerManager.Edit(id, id + ',' + address + '/' + mask);
+            return Get();
         }
     }
 }

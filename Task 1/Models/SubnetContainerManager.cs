@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Web;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Task_1.Models
 {
@@ -38,18 +34,14 @@ namespace Task_1.Models
 
         public void Delete(string id)
         {
-            try
-            {
-                _subnetContainer.Subnets.ToList<Subnet>().Remove(_subnetContainer.Subnets.Single(subnet => subnet.Id == id));
-                _repository.Delete(id);
-            }
-            catch(Exception)
-            { return; };
+            _subnetContainer.Subnets = _subnetContainer.Subnets.Where(subnet => subnet.Id != id);
+            _repository.Delete(id);
         }
 
-        public void Edit(string id, string raw_subnet)
+        public void Edit(string id, string masked_address)
         {
-            throw new NotImplementedException();
+            Delete(id);
+            Create(id + ',' + masked_address);
         }
     }
 }
