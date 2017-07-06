@@ -43,7 +43,7 @@ namespace Task_1.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddSubnet(string id, string address, string mask)
+        public ActionResult CreateSubnet(string id, string address, string mask)
         {
             _subnetContainerManager.Create(id + ',' + address + '/' + mask);
             return Get();

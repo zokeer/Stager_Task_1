@@ -4,6 +4,6 @@ namespace Task_1.Models
 {
     public class SubnetContainer
     {
-        public IEnumerable<Subnet> Subnets { get; set; }
+        public List<Subnet> Subnets { get; set; }
     }
 }

@@ -29,8 +29,7 @@
         function() {
             var data = table.row($(this).parents('tr')).data();
             $.post("/SubnetContainer/DeleteSubnet", { id: data.Id })
-                .done(function (data) {
-                    console.info(data);
+                .done(function(data) {
                     table.ajax.reload();
                 });
         });
@@ -41,5 +40,18 @@
             var data = table.row($(this).parents('tr')).data();
             console.info(data.Id + "edit");
         });
+
+    $('#submit_new_subnet').click(function() {
+        $.post("/SubnetContainer/CreateSubnet",
+                {
+                    id: $('#new_id').val(),
+                    address: $('#new_address').val(),
+                    mask: $('#new_mask').val()
+                })
+            .done(function(data) {
+                table.ajax.reload();
+            });
+    });
 }
+
 $(document).ready(sync_func);

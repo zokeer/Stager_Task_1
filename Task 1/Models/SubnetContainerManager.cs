@@ -28,13 +28,14 @@ namespace Task_1.Models
             {
                 if (subnet.Id == new_subnet.Id)
                     throw new InvalidOperationException();
-                throw new NotImplementedException();
             }
+            _subnetContainer.Subnets.Add(new_subnet);
+            _repository.Create(raw_subnet);
         }
 
         public void Delete(string id)
         {
-            _subnetContainer.Subnets = _subnetContainer.Subnets.Where(subnet => subnet.Id != id);
+            _subnetContainer.Subnets = _subnetContainer.Subnets.Where(subnet => subnet.Id != id).ToList();
             _repository.Delete(id);
         }
 

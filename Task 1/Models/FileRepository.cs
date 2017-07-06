@@ -16,9 +16,14 @@ namespace Task_1.Models
             this.repository_path = repository_path;
         }
 
-        public void Create(string data)
+        public void Create(string raw_subnet)
         {
-            throw new NotImplementedException();
+            var subnets = GetData();
+            subnets.Add(new Subnet(raw_subnet));
+            File.WriteAllText(repository_path,
+                JsonConvert.SerializeObject(subnets.Select(subnet => $"{subnet.Id},{subnet.Address}/{subnet.Mask}"))
+                );
+
         }
 
         public void Delete(string id)
@@ -27,8 +32,8 @@ namespace Task_1.Models
             subnets.Remove(subnets.Find(subnet => subnet.Id == id));
             File.WriteAllText(repository_path,
                 JsonConvert.SerializeObject(
-                    subnets.Select(subnet => $"{subnet.Id},{subnet.Address}/{subnet.Mask}"
-                    )));
+                    subnets.Select(subnet => $"{subnet.Id},{subnet.Address}/{subnet.Mask}"))
+                    );
         }
 
         public void Edit(string id, string data)
