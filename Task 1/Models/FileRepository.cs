@@ -16,12 +16,14 @@ namespace Task_1.Models
             this.repository_path = repository_path;
         }
 
-        public void Create(string raw_subnet)
+        public void Create(string id, string raw_subnet)
         {
             var subnets = GetData();
-            subnets.Add(new Subnet(raw_subnet));
+            subnets.Add(new Subnet(id, raw_subnet));
             File.WriteAllText(repository_path,
-                JsonConvert.SerializeObject(subnets.Select(subnet => $"{subnet.Id},{subnet.Address}/{subnet.Mask}"))
+                JsonConvert.SerializeObject(
+                    subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}")
+                    )
                 );
 
         }
@@ -32,20 +34,21 @@ namespace Task_1.Models
             subnets.Remove(subnets.Find(subnet => subnet.Id == id));
             File.WriteAllText(repository_path,
                 JsonConvert.SerializeObject(
-                    subnets.Select(subnet => $"{subnet.Id},{subnet.Address}/{subnet.Mask}"))
+                    subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}"))
                     );
         }
 
-        public void Edit(string id, string data)
+        public void Edit(string id, string raw_subnet)
         {
-            throw new NotImplementedException();
+            Delete(id);
+            Create(id, raw_subnet);
         }
 
         public List<Subnet> GetData()
         {
             var data = File.ReadAllText(repository_path);
             return JsonConvert.DeserializeObject<IEnumerable<string>>(data)
-                .Select(raw_subnet => new Subnet(raw_subnet)).ToList();
+                .Select(raw_data => new Subnet(raw_data.Split(',')[0], raw_data.Split(',')[1])).ToList();
         }
     }
 }

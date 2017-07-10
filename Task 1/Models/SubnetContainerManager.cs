@@ -21,16 +21,16 @@ namespace Task_1.Models
             return _subnetContainer.Subnets;
         }
 
-        public void Create(string raw_subnet)
+        public void Create(string id, string raw_subnet)
         {
-            var new_subnet = new Subnet(raw_subnet);
-            foreach (var subnet in _subnetContainer.Subnets)
+            var new_subnet = new Subnet(id, raw_subnet);
+            if (SubnetValidator.IsValidAddress(raw_subnet) 
+                && SubnetValidator.IsValidMask(raw_subnet) 
+                && !SubnetValidator.ContainsId(_subnetContainer, id))
             {
-                if (subnet.Id == new_subnet.Id)
-                    throw new InvalidOperationException();
+                _subnetContainer.Subnets.Add(new_subnet);
+                _repository.Create(id, raw_subnet);
             }
-            _subnetContainer.Subnets.Add(new_subnet);
-            _repository.Create(raw_subnet);
         }
 
         public void Delete(string id)
@@ -39,10 +39,10 @@ namespace Task_1.Models
             _repository.Delete(id);
         }
 
-        public void Edit(string id, string masked_address)
+        public void Edit(string id, string raw_subnet)
         {
             Delete(id);
-            Create(id + ',' + masked_address);
+            Create(id, raw_subnet);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Task_1.Controllers
             IEnumerable<object> masked_subnets = subnets.Select((subnet, index) => new
             {
                 subnet.Id,
-                MaskedAddress = _normalizeSubnetName(subnet.Address.ToString(), subnet.Mask.ToString()),
+                MaskedAddress = _normalizeSubnetName(subnet.Network.Network.ToString(), subnet.Network.Cidr.ToString()),
                 DT_RowId = subnet.Id
 
             });
@@ -45,7 +45,7 @@ namespace Task_1.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateSubnet(string id, string address, string mask)
         {
-            _subnetContainerManager.Create(id + ',' + address + '/' + mask);
+            _subnetContainerManager.Create(id, address + '/' + mask);
             return Get();
         }
 
@@ -59,7 +59,7 @@ namespace Task_1.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditSubnet(string id, string address, string mask)
         {
-            _subnetContainerManager.Edit(id, id + ',' + address + '/' + mask);
+            _subnetContainerManager.Edit(id, address + '/' + mask);
             return Get();
         }
     }
