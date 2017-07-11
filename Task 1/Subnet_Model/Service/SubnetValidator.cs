@@ -12,7 +12,7 @@ namespace Task_1.Models
     public static class SubnetValidator
     {
         /// <summary>
-        /// Проверяет адрес подсети на соответствие виду ddd.ddd.ddd.ddd/d[d].
+        /// Проверяет адрес подсети на соответствие виду d[dd].d[dd].d[dd].d[dd]/d[d].
         /// Проверку осущесвляет передачей ответсвенности методу Parse класса IPNetwork.
         /// </summary>
         /// <param name="raw_subnet">Строковое представление подсети.</param>
@@ -58,9 +58,9 @@ namespace Task_1.Models
         /// <param name="subnet_container">Контейнер подсетей.</param>
         /// <param name="id">ID, который нужно проверить.</param>
         /// <returns>True/False: является ли ID верным.</returns>
-        public static bool isValidId(SubnetContainer subnet_container, string id)
+        public static bool isValidId(IRepository repository, string id)
         {
-            return !subnet_container.Subnets.Exists(subnet => subnet.Id == id)
+            return !repository.Get().Exists(subnet => subnet.Id == id)
                 && id.Length <= 255
                 && !string.IsNullOrEmpty(id);
         }

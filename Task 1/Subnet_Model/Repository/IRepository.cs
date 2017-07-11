@@ -11,7 +11,7 @@ namespace Task_1.Models
         /// Получает все записи. Преобразует их в экземпляры класса Subnet, складывает в контейнер.
         /// </summary>
         /// <returns>Контейнер экземпляров класса Subnet</returns>
-        List<Subnet> GetData();
+        List<Subnet> GetDataFromPhysicalSource();
         /// <summary>
         /// Добавляет новую подсеть.
         /// </summary>
@@ -23,5 +23,11 @@ namespace Task_1.Models
         /// </summary>
         /// <param name="id">ID сети, которую нужно удалить.</param>
         void Delete(string id);
+        /// <summary>
+        /// Более быстрый метод, нежели GetDataFromPhysicalSource. 
+        /// Работает только с виртуальным хранилищем.
+        /// </summary>
+        /// <returns>Контейнер экземпляров класса Subnet</returns>
+        List<Subnet> Get();
     }
 }

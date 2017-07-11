@@ -13,10 +13,6 @@ namespace Task_1.Models
         /// Репозиторий, реализующий методы работы с хранилищем данных.
         /// </summary>
         private IRepository _repository;
-        /// <summary>
-        /// Контейнер подсетей. Основное виртуальное хранилище данных.
-        /// </summary>
-        private SubnetContainer _subnetContainer;
 
         /// <summary>
         /// Конструктор инициализирует репозиторий, контейнер подсетей и наполняет его данными из репозитория.
@@ -25,8 +21,6 @@ namespace Task_1.Models
         public SubnetContainerManager(IRepository repository)
         {
             _repository = repository;
-            _subnetContainer = new SubnetContainer();
-            _subnetContainer.Subnets = repository.GetData();
         }
 
         /// <summary>
@@ -35,7 +29,7 @@ namespace Task_1.Models
         /// <returns>Список подсетей.</returns>
         public IEnumerable<Subnet> Get()
         {
-            return _subnetContainer.Subnets;
+            return _repository.Get();
         }
 
         /// <summary>
@@ -48,10 +42,8 @@ namespace Task_1.Models
         {
             if (SubnetValidator.IsValidAddress(raw_subnet) 
                 && SubnetValidator.IsValidMask(raw_subnet) 
-                && SubnetValidator.isValidId(_subnetContainer, id))
+                && SubnetValidator.isValidId(_repository, id))
             {
-                var new_subnet = new Subnet(id, raw_subnet);
-                _subnetContainer.Subnets.Add(new_subnet);
                 _repository.Create(id, raw_subnet);
             }
         }
@@ -62,7 +54,6 @@ namespace Task_1.Models
         /// <param name="id">ID сети, которую надо удалить.</param>
         public void Delete(string id)
         {
-            _subnetContainer.Subnets = _subnetContainer.Subnets.Where(subnet => subnet.Id != id).ToList();
             _repository.Delete(id);
         }
 

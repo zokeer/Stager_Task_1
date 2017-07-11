@@ -226,7 +226,6 @@
     <Compile Include="Subnet_Model\Repository\FileRepository.cs" />
     <Compile Include="Subnet_Model\Repository\IRepository.cs" />
     <Compile Include="Subnet_Model\Models\Subnet.cs" />
-    <Compile Include="Subnet_Model\Models\SubnetContainer.cs" />
     <Compile Include="Subnet_Model\Service\SubnetContainerManager.cs" />
     <Compile Include="Subnet_Model\Service\SubnetValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using Task_1.Models;
 
@@ -27,7 +28,7 @@ namespace Task_1.Controllers
         /// </summary>
         public SubnetContainerController()
         {
-            var repository = new FileRepository(@"C:\Users\golubev.dmitriy\documents\visual studio 2015\Projects\Task 1\Task 1\test.txt");
+            var repository = new FileRepository(HostingEnvironment.ApplicationPhysicalPath + "test.txt");
             _normalizeSubnetName = (id, mask) => $"{id}/{mask}";
             _subnetContainerManager = new SubnetContainerManager(repository);
         }        
