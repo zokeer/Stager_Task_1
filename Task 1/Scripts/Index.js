@@ -36,7 +36,8 @@
 
     $('#subnetTable tbody').on('click',
         '#editButton',
-        function() {
+        function () {
+            var data = table.row($(this).parents('tr')).data();
             $('#editModal').css("display", "flex");
             $('#editModal').click(function (event) {
                 if (event.target == $('#editModal')[0]) {
@@ -46,7 +47,8 @@
             $('#submit_editted_subnet').click(function() {
                 $.post("/SubnetContainer/EditSubnet",
                         {
-                            id: $('#edit_id').val(),
+                            old_id: data.Id,
+                            new_id: $('#edit_id').val(),
                             address: $('#edit_address').val(),
                             mask: $('#edit_mask').val()
                         })

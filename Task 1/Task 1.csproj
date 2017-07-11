@@ -223,12 +223,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\FileRepository.cs" />
-    <Compile Include="Models\IRepository.cs" />
-    <Compile Include="Models\Subnet.cs" />
-    <Compile Include="Models\SubnetContainer.cs" />
-    <Compile Include="Models\SubnetContainerManager.cs" />
-    <Compile Include="Models\SubnetValidator.cs" />
+    <Compile Include="Subnet_Model\Repository\FileRepository.cs" />
+    <Compile Include="Subnet_Model\Repository\IRepository.cs" />
+    <Compile Include="Subnet_Model\Models\Subnet.cs" />
+    <Compile Include="Subnet_Model\Models\SubnetContainer.cs" />
+    <Compile Include="Subnet_Model\Service\SubnetContainerManager.cs" />
+    <Compile Include="Subnet_Model\Service\SubnetValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

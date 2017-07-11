@@ -3,6 +3,9 @@ using LukeSkywalker.IPNetwork;
 
 namespace Task_1.Models
 {
+    /// <summary>
+    /// Класс представления подсетей.
+    /// </summary>
     public class Subnet
     {
         public string Id { get; }
