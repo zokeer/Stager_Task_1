@@ -41,7 +41,7 @@ namespace Task_1.Models
             try
             {
                 var mask = raw_subnet.Split('/')[1];
-                if (mask.Length < 0 && mask.Length > 2)
+                if (string.IsNullOrEmpty(mask) || mask.Length > 2)
                     throw new Exception();
                 var possible_subnet = IPNetwork.Parse(raw_subnet);
                 return true;
@@ -62,6 +62,17 @@ namespace Task_1.Models
         {
             return !repository.Get().Exists(subnet => subnet.Id == id)
                 && id.Length <= 255
+                && !string.IsNullOrEmpty(id);
+        }
+
+        /// <summary>
+        /// Проверяет соответствение требованиям о длине [0..255].
+        /// </summary>
+        /// <param name="id">ID, который нужно проверить.</param>
+        /// <returns>True/False: является ли ID верным.</returns>
+        public static bool isValidId(string id)
+        {
+            return id.Length <= 255
                 && !string.IsNullOrEmpty(id);
         }
     }

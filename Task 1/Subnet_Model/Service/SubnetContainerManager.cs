@@ -27,7 +27,7 @@ namespace Task_1.Models
         /// Возвращает список подсетей из контейнера.
         /// </summary>
         /// <returns>Список подсетей.</returns>
-        public IEnumerable<Subnet> Get()
+        public List<Subnet> Get()
         {
             return _repository.Get();
         }
@@ -54,7 +54,8 @@ namespace Task_1.Models
         /// <param name="id">ID сети, которую надо удалить.</param>
         public void Delete(string id)
         {
-            _repository.Delete(id);
+            if(SubnetValidator.isValidId(id))
+                _repository.Delete(id);
         }
 
         /// <summary>

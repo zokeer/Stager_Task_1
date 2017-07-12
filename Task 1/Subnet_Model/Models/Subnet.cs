@@ -16,5 +16,18 @@ namespace Task_1.Models
             Id = id;
             Network = IPNetwork.Parse(raw_subnet);
         }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        public override bool Equals(object other)
+        {
+            if (!(other is Subnet))
+                return false;
+            Subnet other_subnet = (Subnet)other;
+            return Id == other_subnet.Id && Network == other_subnet.Network;
+        }
     }
 }
