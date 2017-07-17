@@ -99,6 +99,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Subnet_Model\Models\SubnetTests.cs" />
+    <Compile Include="Subnet_Model\Service\SubnetCoverageManagerTests.cs" />
     <Compile Include="Subnet_Model\Service\SubnetValidatorTests.cs" />
     <Compile Include="Subnet_Model\Service\SubnetContainerManagerTests.cs" />
   </ItemGroup>

@@ -1,14 +1,19 @@
 ﻿var sync_func = function() {
     var table = $('#subnetTable').DataTable({
         "processing": true,
-        "serverSide": true,
         "ajax": {
             "url": "/SubnetContainer/Get",
             "type": "GET"
         },
         "columns": [
-            { "data": "Id" },
-            { "data": "MaskedAddress" }
+            {
+                "type": "string",
+                "data": "Id"
+            },
+            {
+                "type": "string",
+                "data": "MaskedAddress"
+            }
         ],
         "columnDefs": [
             {
@@ -21,7 +26,8 @@
                 "data": null,
                 "defaultContent": "<button id='editButton'>Изменить</button>"
             }
-        ]
+        ],
+        "order": [],
     });
 
     $('#subnetTable tbody').on('click',

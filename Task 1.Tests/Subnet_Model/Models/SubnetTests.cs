@@ -52,5 +52,41 @@ namespace Task_1.Models.Tests
             Assert.AreNotEqual(subnet, other_subnet);
         }
         #endregion
+
+        #region isCoveringTests
+        [TestMethod()]
+        public void IsCovering_LargeSoversSmall_Success()
+        {
+            var large = new Subnet("large", "10.0.0.0/23");
+            var small = new Subnet("small", "10.0.1.0/24");
+            Assert.IsTrue(large.IsCovering(small));
+        }
+
+        [TestMethod()]
+        public void IsCovering_SmallCoveringLarge_Fail()
+        {
+            var large = new Subnet("large", "10.0.0.0/23");
+            var small = new Subnet("small", "10.0.1.0/24");
+            Assert.IsFalse(small.IsCovering(large));
+        }
+
+        [TestMethod()]
+        public void IsCovering_SameSubnets_Success()
+        {
+            var large = new Subnet("large", "10.0.0.0/23");
+            Assert.IsTrue(large.IsCovering(large));
+        }
+
+        [TestMethod()]
+        public void IsCovering_TransitiveCover_Success()
+        { 
+            var large = new Subnet("large", "10.0.0.0/23");
+            var small = new Subnet("small", "10.0.0.0/24");
+            var smallest = new Subnet("smallest", "10.0.0.0/30");
+            Assert.IsTrue(large.IsCovering(small));
+            Assert.IsTrue(small.IsCovering(smallest));
+            Assert.IsTrue(large.IsCovering(smallest));
+        }
+        #endregion
     }
 }
