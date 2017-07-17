@@ -43,10 +43,10 @@ namespace Task_1.Subnet_Model.Service
             return GetAllCovers(subnet_container);
         }
 
-        public static Dictionary<Subnet, List<Subnet>> GetMinimalCoverage(List<Subnet> subnet_container)
-        {
-            var coverages = GetCoverage(subnet_container);
-            var used_subnets = new List<Subnet>();
-        }
+        //public static Dictionary<Subnet, List<Subnet>> GetMinimalCoverage(List<Subnet> subnet_container)
+        //{
+        //    var coverages = GetCoverage(subnet_container);
+        //    var used_subnets = new List<Subnet>();
+        //}
     }
 }
