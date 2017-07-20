@@ -1,14 +1,19 @@
 ﻿var sync_func = function() {
     var table = $('#subnetTable').DataTable({
         "processing": true,
-        "serverSide": true,
         "ajax": {
             "url": "/SubnetContainer/Get",
             "type": "GET"
         },
         "columns": [
-            { "data": "Id" },
-            { "data": "MaskedAddress" }
+            {
+                "type": "string",
+                "data": "Id"
+            },
+            {
+                "type": "string",
+                "data": "MaskedAddress"
+            }
         ],
         "columnDefs": [
             {
@@ -21,7 +26,8 @@
                 "data": null,
                 "defaultContent": "<button id='editButton'>Изменить</button>"
             }
-        ]
+        ],
+        "order": [],
     });
 
     $('#subnetTable tbody').on('click',
@@ -36,7 +42,8 @@
 
     $('#subnetTable tbody').on('click',
         '#editButton',
-        function() {
+        function () {
+            var data = table.row($(this).parents('tr')).data();
             $('#editModal').css("display", "flex");
             $('#editModal').click(function (event) {
                 if (event.target == $('#editModal')[0]) {
@@ -46,7 +53,8 @@
             $('#submit_editted_subnet').click(function() {
                 $.post("/SubnetContainer/EditSubnet",
                         {
-                            id: $('#edit_id').val(),
+                            old_id: data.Id,
+                            new_id: $('#edit_id').val(),
                             address: $('#edit_address').val(),
                             mask: $('#edit_mask').val()
                         })
