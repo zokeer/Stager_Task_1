@@ -76,6 +76,21 @@
                 table.ajax.reload();
             });
     });
+
+    $('#getCoverage').click(function () {
+        $('#coverageTable').DataTable({
+            "processing": true,
+            "ajax": {
+                "url": "/SubnetContainer/GetCoverage",
+                "type": "GET"
+            },
+            columns: [
+                { data: "KeyId" },
+                { data: "KeyMaskedAddress" },
+                { data: "Children" }
+            ]
+        });
+    });
 }
 
 $(document).ready(sync_func);

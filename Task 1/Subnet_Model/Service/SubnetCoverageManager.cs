@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Task_1.Models;
 
 namespace Task_1.Subnet_Model.Service
@@ -21,7 +19,7 @@ namespace Task_1.Subnet_Model.Service
                                 coverage_dict[subnet].Add(other_subnet);
                         }
                         else
-                            coverage_dict.Add(subnet, new List<Subnet>() { other_subnet });
+                            coverage_dict.Add(subnet, new List<Subnet> { other_subnet });
                     else
                     {
                         if (coverage_dict.ContainsKey(other_subnet))
@@ -30,7 +28,7 @@ namespace Task_1.Subnet_Model.Service
                                 coverage_dict[other_subnet].Add(other_subnet);
                         }
                         else
-                            coverage_dict.Add(other_subnet, new List<Subnet>() { other_subnet });
+                            coverage_dict.Add(other_subnet, new List<Subnet> { other_subnet });
                     }
                 }
             return coverage_dict;

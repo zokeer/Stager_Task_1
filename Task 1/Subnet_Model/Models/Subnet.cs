@@ -1,7 +1,5 @@
-﻿using System.Net;
+﻿using System;
 using LukeSkywalker.IPNetwork;
-using System.Collections;
-using System;
 
 namespace Task_1.Models
 {
@@ -52,7 +50,7 @@ namespace Task_1.Models
         public int CompareTo(object obj)
         {
             Subnet another = (Subnet)obj;
-            if (this.IsCovering(another))
+            if (IsCovering(another))
                 return 1;
             if (another.IsCovering(this))
                 return -1;

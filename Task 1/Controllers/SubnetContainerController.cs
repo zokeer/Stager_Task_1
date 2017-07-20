@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using Microsoft.ApplicationInsights.DataContracts;
+using Newtonsoft.Json;
 using Task_1.Models;
+using Task_1.Subnet_Model.Service;
 
 namespace Task_1.Controllers
 {
@@ -24,7 +27,6 @@ namespace Task_1.Controllers
         
         /// <summary>
         /// Конструктор инициализириует функцию преобразования и сервис.
-        /// TODO: реализовать DI, не хардкодить путь.
         /// </summary>
         public SubnetContainerController()
         {
@@ -104,6 +106,28 @@ namespace Task_1.Controllers
         {
             _subnetContainerManager.Edit(old_id, new_id, address + '/' + mask);
             return Get();
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult GetCoverage()
+        {
+            var coverage = SubnetCoverageManager.GetCoverage(_subnetContainerManager.Get());
+            var json_acceptable_list = new List<object>();
+            foreach (var key in coverage.Keys)
+            {
+                json_acceptable_list.Add(new
+                {
+                    KeyId = key.Id,
+                    KeyMaskedAddress = _normalizeSubnetName(key.Network.Network.ToString(), key.Network.Cidr.ToString()),
+                    Children = coverage[key].Select(subnet => subnet.Id)
+                });                
+            }
+            return Json(new
+            {
+                data = json_acceptable_list,
+                recordsTotal = json_acceptable_list.Count,
+                recordsFiltered = json_acceptable_list.Count
+            }, JsonRequestBehavior.AllowGet);
         }
     }
 }

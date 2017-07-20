@@ -1,11 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Task_1.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Task_1.Models;
 
 namespace Task_1.Tests.Subnet_Model.Service
 {
@@ -13,7 +10,7 @@ namespace Task_1.Tests.Subnet_Model.Service
     public class SubnetContainerManagerTests
     {
         #region GetTests
-        [TestMethod()]
+        [TestMethod]
         public void GetTest_SameCollections()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -34,7 +31,7 @@ namespace Task_1.Tests.Subnet_Model.Service
             }
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetTest_CollectionsOfDifferentCount()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -52,7 +49,7 @@ namespace Task_1.Tests.Subnet_Model.Service
             Assert.AreNotEqual(test_list.Count, subnet_container_manager.Get().Count);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetTest_CollectionsOfDifferentElementsId()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -81,7 +78,7 @@ namespace Task_1.Tests.Subnet_Model.Service
             }
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetTest_CollectionsOfDifferentElementsNetworks()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -111,7 +108,7 @@ namespace Task_1.Tests.Subnet_Model.Service
         }
         #endregion
         #region CreateTests
-        [TestMethod()]
+        [TestMethod]
         public void Create_ValidSubnet_RepositoryMethodCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -122,41 +119,41 @@ namespace Task_1.Tests.Subnet_Model.Service
             mock.Verify(m => m.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void Create_ExistingIdSubnet_RepositoryMethodNotCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
             SubnetContainerManager subnet_container_manager = new SubnetContainerManager(mock.Object);
-            mock.Setup(m => m.Get()).Returns(new List<Subnet>() {new Subnet("new_ID", "192.168.168.0/24") });
+            mock.Setup(m => m.Get()).Returns(new List<Subnet> {new Subnet("new_ID", "192.168.168.0/24") });
             mock.Setup(m => m.Create(It.IsAny<string>(), It.IsAny<string>()));
             subnet_container_manager.Create("new_ID", "192.168.168.0/24");
             mock.Verify(m => m.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void Create_WrongAddressSubnet_RepositoryMethodNotCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
             SubnetContainerManager subnet_container_manager = new SubnetContainerManager(mock.Object);
-            mock.Setup(m => m.Get()).Returns(new List<Subnet>() { new Subnet("new_ID", "192.168.168.0/24") });
+            mock.Setup(m => m.Get()).Returns(new List<Subnet> { new Subnet("new_ID", "192.168.168.0/24") });
             mock.Setup(m => m.Create(It.IsAny<string>(), It.IsAny<string>()));
             subnet_container_manager.Create("new_ID", "192.168/24");
             mock.Verify(m => m.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void Create_WrongMaskSubnet_RepositoryMethodNotCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
             SubnetContainerManager subnet_container_manager = new SubnetContainerManager(mock.Object);
-            mock.Setup(m => m.Get()).Returns(new List<Subnet>() { new Subnet("new_ID", "192.168.168.0/24") });
+            mock.Setup(m => m.Get()).Returns(new List<Subnet> { new Subnet("new_ID", "192.168.168.0/24") });
             mock.Setup(m => m.Create(It.IsAny<string>(), It.IsAny<string>()));
             subnet_container_manager.Create("new_ID", "192.168.168.0/50");
             mock.Verify(m => m.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
         #endregion
         #region DeleteTests
-        [TestMethod()]
+        [TestMethod]
         public void Delete_ValidId_RepositoryMethodCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -166,7 +163,7 @@ namespace Task_1.Tests.Subnet_Model.Service
             mock.Verify(m => m.Delete(It.IsAny<string>()), Times.Once);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void Delete_LongId_RepositoryMethodNotCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -176,7 +173,7 @@ namespace Task_1.Tests.Subnet_Model.Service
             mock.Verify(m => m.Delete(It.IsAny<string>()), Times.Never);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void Delete_EmptyId_RepositoryMethodNotCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
