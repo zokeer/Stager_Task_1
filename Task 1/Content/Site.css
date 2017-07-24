@@ -26,6 +26,9 @@ textarea {
     border: black;
     border-style: dashed;
     border-width: 2px;
+    padding: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
 }
 
 .create_editor >  *{
@@ -55,4 +58,8 @@ textarea {
     display: flex;
     padding: 20px;
     border: 1px solid #888;
+}
+
+#coverage_table_wrapper {
+    display: none;
 }

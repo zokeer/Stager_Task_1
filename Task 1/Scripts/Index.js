@@ -78,6 +78,7 @@
     });
 
     $('#getCoverage').click(function () {
+        $('#coverage_table_wrapper').css('display', 'block');
         $('#coverageTable').DataTable({
             "processing": true,
             "ajax": {

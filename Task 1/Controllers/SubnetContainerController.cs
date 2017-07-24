@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using Microsoft.ApplicationInsights.DataContracts;
 using Newtonsoft.Json;
 using Task_1.Models;
-using Task_1.Subnet_Model.Service;
+using Task_1.DomainModel.Service;
 
 namespace Task_1.Controllers
 {
@@ -108,10 +108,14 @@ namespace Task_1.Controllers
             return Get();
         }
 
+        /// <summary>
+        /// Получает минимальное покрытие подсетей из класса-сервиса.
+        /// </summary>
+        /// <returns>Json-представление маскированных подсетей минимального покрытия и дополнительные поля для DataTables</returns>
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult GetCoverage()
         {
-            var coverage = SubnetCoverageManager.GetCoverage(_subnetContainerManager.Get());
+            var coverage = SubnetCoverageManager.GetMinimalCoverage(_subnetContainerManager.Get());
             var json_acceptable_list = new List<object>();
             foreach (var key in coverage.Keys)
             {

@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Task_1.Models;
 
-namespace Task_1.Tests.Subnet_Model.Service
+namespace Task_1.Tests.DomainModel.Service
 {
     [TestClass]
     public class SubnetContainerManagerTests
