@@ -1,9 +1,8 @@
-﻿using System;
+﻿using DomainModel.Models;
 using System.Collections.Generic;
 using System.Linq;
-using Task_1.Models;
 
-namespace Task_1.DomainModel.Service
+namespace DomainModel.Service
 {
     /// <summary>
     /// Класс хранит в себе методы, для построения минимального покрытия.

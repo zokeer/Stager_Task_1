@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using DomainModel.Models;
+using System.Collections.Generic;
 
-namespace Task_1.Models
+namespace DomainModel.Repository
 {
     /// <summary>
     /// Интерфейс репозитория, представляет требования к созданию новых репозиториев, описывая их поведение.

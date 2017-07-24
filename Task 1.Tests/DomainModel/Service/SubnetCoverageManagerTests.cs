@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Task_1.Models;
+using NUnit.Framework;
+using DomainModel.Models;
+using DomainModel.Service;
 
 namespace Task_1.DomainModel.Service.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class SubnetCoverageManagerTests
     {
-        [TestMethod]
+        [Test]
         public void GetMinimalCoverage_OneCoversAnother_Success()
         {
             var large = new Subnet("large", "10.0.0.0/24");
@@ -19,12 +20,12 @@ namespace Task_1.DomainModel.Service.Tests
             };
             foreach (var key in expected.Keys)
             {
-                CollectionAssert.AreEquivalent(expected[key], result[key]);
+                NUnit.Framework.CollectionAssert.AreEquivalent(expected[key], result[key]);
             }
 
         }
 
-        [TestMethod]
+        [Test]
         public void GetMinimalCoverage_OneCoversAnotherTwo_Success()
         {
             var large = new Subnet("large", "10.0.0.0/24");
@@ -37,12 +38,12 @@ namespace Task_1.DomainModel.Service.Tests
             };
             foreach (var key in expected.Keys)
             {
-                CollectionAssert.AreEquivalent(expected[key], result[key]);
+                NUnit.Framework.CollectionAssert.AreEquivalent(expected[key], result[key]);
             }
 
         }
 
-        [TestMethod]
+        [Test]
         public void GetMinimalCoverage_TwoCoverages_Success()
         {
             var large_1 = new Subnet("large1", "10.0.0.0/24");
@@ -57,11 +58,11 @@ namespace Task_1.DomainModel.Service.Tests
             };
             foreach (var key in expected.Keys)
             {
-                CollectionAssert.AreEquivalent(expected[key], result[key]);
+                NUnit.Framework.CollectionAssert.AreEquivalent(expected[key], result[key]);
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetMinimalCoverage_TransitiveCoverage_OneCoversAll()
         {
             var large = new Subnet("large", "10.0.0.0/24");
@@ -74,11 +75,11 @@ namespace Task_1.DomainModel.Service.Tests
             };
             foreach (var key in expected.Keys)
             {
-                CollectionAssert.AreEquivalent(expected[key], result[key]);
+                NUnit.Framework.CollectionAssert.AreEquivalent(expected[key], result[key]);
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetMinimalCoverage_SameNetwork_CoverBoth()
         {
             var large_1 = new Subnet("large_1", "10.0.0.0/24");
@@ -90,7 +91,7 @@ namespace Task_1.DomainModel.Service.Tests
             };
             foreach (var key in expected.Keys)
             {
-                CollectionAssert.AreEquivalent(expected[key], result[key]);
+                NUnit.Framework.CollectionAssert.AreEquivalent(expected[key], result[key]);
             }
         }
     }

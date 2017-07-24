@@ -1,7 +1,8 @@
 ﻿using System;
 using LukeSkywalker.IPNetwork;
+using DomainModel.Repository;
 
-namespace Task_1.Models
+namespace DomainModel.Service
 {
     /// <summary>
     /// Статический класс, хранящий методы для валидации данных, поступающих от пользователя.

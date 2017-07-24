@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Task_1.Models;
+using NUnit.Framework;
+using DomainModel.Repository;
+using DomainModel.Service;
+using DomainModel.Models;
 
-namespace Task_1.Tests.DomainModel.Service
+namespace Task_1.DomainModel.Service.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class SubnetContainerManagerTests
     {
         #region GetTests
-        [TestMethod]
+        [Test]
         public void GetTest_SameCollections()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -27,11 +29,11 @@ namespace Task_1.Tests.DomainModel.Service
 
             foreach(var test_subnet in test_list)
             {
-                Assert.IsTrue(subnet_container_manager.Get().Contains(test_subnet));
+                NUnit.Framework.Assert.IsTrue(subnet_container_manager.Get().Contains(test_subnet));
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetTest_CollectionsOfDifferentCount()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -46,10 +48,10 @@ namespace Task_1.Tests.DomainModel.Service
 
             mock.Setup(m => m.Get()).Returns(test_list.Skip(2).ToList());
 
-            Assert.AreNotEqual(test_list.Count, subnet_container_manager.Get().Count);
+            NUnit.Framework.Assert.AreNotEqual(test_list.Count, subnet_container_manager.Get().Count);
         }
 
-        [TestMethod]
+        [Test]
         public void GetTest_CollectionsOfDifferentElementsId()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -74,11 +76,11 @@ namespace Task_1.Tests.DomainModel.Service
 
             foreach (var test_subnet in test_list)
             {
-                Assert.IsFalse(subnet_container_manager.Get().Contains(test_subnet));
+                NUnit.Framework.Assert.IsFalse(subnet_container_manager.Get().Contains(test_subnet));
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetTest_CollectionsOfDifferentElementsNetworks()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -103,12 +105,12 @@ namespace Task_1.Tests.DomainModel.Service
 
             foreach (var test_subnet in test_list)
             {
-                Assert.IsFalse(subnet_container_manager.Get().Contains(test_subnet));
+                NUnit.Framework.Assert.IsFalse(subnet_container_manager.Get().Contains(test_subnet));
             }
         }
         #endregion
         #region CreateTests
-        [TestMethod]
+        [Test]
         public void Create_ValidSubnet_RepositoryMethodCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -119,7 +121,7 @@ namespace Task_1.Tests.DomainModel.Service
             mock.Verify(m => m.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
-        [TestMethod]
+        [Test]
         public void Create_ExistingIdSubnet_RepositoryMethodNotCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -130,7 +132,7 @@ namespace Task_1.Tests.DomainModel.Service
             mock.Verify(m => m.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
-        [TestMethod]
+        [Test]
         public void Create_WrongAddressSubnet_RepositoryMethodNotCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -141,7 +143,7 @@ namespace Task_1.Tests.DomainModel.Service
             mock.Verify(m => m.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
-        [TestMethod]
+        [Test]
         public void Create_WrongMaskSubnet_RepositoryMethodNotCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -153,7 +155,7 @@ namespace Task_1.Tests.DomainModel.Service
         }
         #endregion
         #region DeleteTests
-        [TestMethod]
+        [Test]
         public void Delete_ValidId_RepositoryMethodCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -163,7 +165,7 @@ namespace Task_1.Tests.DomainModel.Service
             mock.Verify(m => m.Delete(It.IsAny<string>()), Times.Once);
         }
 
-        [TestMethod]
+        [Test]
         public void Delete_LongId_RepositoryMethodNotCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();
@@ -173,7 +175,7 @@ namespace Task_1.Tests.DomainModel.Service
             mock.Verify(m => m.Delete(It.IsAny<string>()), Times.Never);
         }
 
-        [TestMethod]
+        [Test]
         public void Delete_EmptyId_RepositoryMethodNotCalled()
         {
             Mock<IRepository> mock = new Mock<IRepository>();

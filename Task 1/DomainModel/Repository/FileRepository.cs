@@ -2,8 +2,9 @@
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using DomainModel.Models;
 
-namespace Task_1.Models
+namespace DomainModel.Repository
 {
     /// <summary>
     /// Репозиторий работы с файлом, реализует интерфейс IRepository.

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using DomainModel.Models;
+using DomainModel.Repository;
+using System.Collections.Generic;
 
-namespace Task_1.Models
+namespace DomainModel.Service
 {
     /// <summary>
     /// Сервис для работы с контейнером подсетей SubnetContainer.

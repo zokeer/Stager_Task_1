@@ -923,7 +923,7 @@ function markFunction( fn ) {
  * Support testing using an element
  * @param {Function} fn Passed the created element and returns a boolean result
  */
-function assert( fn ) {
+function Assert( fn ) {
 	var el = document.createElement("fieldset");
 
 	try {
@@ -1146,7 +1146,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	// Support: IE<8
 	// Verify that getAttribute really returns attributes and not properties
 	// (excepting IE8 booleans)
-	support.attributes = assert(function( el ) {
+	support.attributes = Assert(function( el ) {
 		el.className = "i";
 		return !el.getAttribute("className");
 	});
@@ -1155,7 +1155,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	---------------------------------------------------------------------- */
 
 	// Check if getElementsByTagName("*") returns only elements
-	support.getElementsByTagName = assert(function( el ) {
+	support.getElementsByTagName = Assert(function( el ) {
 		el.appendChild( document.createComment("") );
 		return !el.getElementsByTagName("*").length;
 	});
@@ -1167,7 +1167,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	// Check if getElementById returns elements by name
 	// The broken getElementById methods don't pick up programmatically-set names,
 	// so use a roundabout getElementsByName test
-	support.getById = assert(function( el ) {
+	support.getById = Assert(function( el ) {
 		docElem.appendChild( el ).id = expando;
 		return !document.getElementsByName || !document.getElementsByName( expando ).length;
 	});
@@ -1284,7 +1284,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	if ( (support.qsa = rnative.test( document.querySelectorAll )) ) {
 		// Build QSA regex
 		// Regex strategy adopted from Diego Perini
-		assert(function( el ) {
+		Assert(function( el ) {
 			// Select is set to empty string on purpose
 			// This is to test IE's treatment of not explicitly
 			// setting a boolean content attribute,
@@ -1328,7 +1328,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			}
 		});
 
-		assert(function( el ) {
+		Assert(function( el ) {
 			el.innerHTML = "<a href='' disabled='disabled'></a>" +
 				"<select disabled='disabled'><option/></select>";
 
@@ -1369,7 +1369,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 		docElem.oMatchesSelector ||
 		docElem.msMatchesSelector) )) ) {
 
-		assert(function( el ) {
+		Assert(function( el ) {
 			// Check to see if it's possible to do matchesSelector
 			// on a disconnected node (IE 9)
 			support.disconnectedMatch = matches.call( el, "*" );
@@ -2743,7 +2743,7 @@ setDocument();
 
 // Support: Webkit<537.32 - Safari 6.0.3/Chrome 25 (fixed in Chrome 27)
 // Detached nodes confoundingly follow *each other*
-support.sortDetached = assert(function( el ) {
+support.sortDetached = Assert(function( el ) {
 	// Should return 1, but returns 4 (following)
 	return el.compareDocumentPosition( document.createElement("fieldset") ) & 1;
 });
@@ -2751,7 +2751,7 @@ support.sortDetached = assert(function( el ) {
 // Support: IE<8
 // Prevent attribute/property "interpolation"
 // https://msdn.microsoft.com/en-us/library/ms536429%28VS.85%29.aspx
-if ( !assert(function( el ) {
+if ( !Assert(function( el ) {
 	el.innerHTML = "<a href='#'></a>";
 	return el.firstChild.getAttribute("href") === "#" ;
 }) ) {
@@ -2764,7 +2764,7 @@ if ( !assert(function( el ) {
 
 // Support: IE<9
 // Use defaultValue in place of getAttribute("value")
-if ( !support.attributes || !assert(function( el ) {
+if ( !support.attributes || !Assert(function( el ) {
 	el.innerHTML = "<input/>";
 	el.firstChild.setAttribute( "value", "" );
 	return el.firstChild.getAttribute( "value" ) === "";
@@ -2778,7 +2778,7 @@ if ( !support.attributes || !assert(function( el ) {
 
 // Support: IE<9
 // Use getAttributeNode to fetch booleans when getAttribute lies
-if ( !assert(function( el ) {
+if ( !Assert(function( el ) {
 	return el.getAttribute("disabled") == null;
 }) ) {
 	addHandle( booleans, function( elem, name, isXML ) {

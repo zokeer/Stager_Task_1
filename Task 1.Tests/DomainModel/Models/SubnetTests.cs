@@ -1,85 +1,86 @@
-﻿using LukeSkywalker.IPNetwork;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DomainModel.Models;
+using LukeSkywalker.IPNetwork;
+using NUnit.Framework;
 
 namespace Task_1.Models.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class SubnetTests
     {
-        [TestMethod]
+        [Test]
         public void Subnet_FixedParams_CreatedInstance()
         {
             var subnet = new Subnet("id", "0.0.0.0/24");
-            Assert.AreEqual(subnet.Id, "id");
-            Assert.AreEqual(IPNetwork.Parse("0.0.0.0/24"), subnet.Network);
-        }
+            NUnit.Framework.Assert.AreEqual(subnet.Id, "id");
+            NUnit.Framework.Assert.AreEqual(IPNetwork.Parse("0.0.0.0/24"), subnet.Network);
+        }        
 
-        [TestMethod]
+        [Test]
         public void GetHashCode_SomeString_GivesIdHashCode()
         {
             var subnet = new Subnet("id", "0.0.0.0/24");
-            Assert.AreEqual(subnet.Id.GetHashCode(), subnet.GetHashCode());
+            NUnit.Framework.Assert.AreEqual(subnet.Id.GetHashCode(), subnet.GetHashCode());
         }
 
         #region EqualsTests
-        [TestMethod]
+        [Test]
         public void Equals_EqualSubnets_Success()
         {
             var subnet = new Subnet("id", "0.0.0.0/24");
             var other_subnet = new Subnet("id", "0.0.0.0/24");
-            Assert.AreEqual(subnet, other_subnet);
+            NUnit.Framework.Assert.AreEqual(subnet, other_subnet);
         }
 
-        [TestMethod]
+        [Test]
         public void Equals_DifferentIds_Fail()
         {
             var subnet = new Subnet("id1", "0.0.0.0/24");
             var other_subnet = new Subnet("id2", "0.0.0.0/24");
-            Assert.AreNotEqual(subnet, other_subnet);
+            NUnit.Framework.Assert.AreNotEqual(subnet, other_subnet);
         }
 
-        [TestMethod]
+        [Test]
         public void Equals_DifferentNetworks_Fail()
         {
             var subnet = new Subnet("id", "5.0.0.0/24");
             var other_subnet = new Subnet("id", "0.0.0.0/30");
-            Assert.AreNotEqual(subnet, other_subnet);
+            NUnit.Framework.Assert.AreNotEqual(subnet, other_subnet);
         }
         #endregion
 
         #region isCoveringTests
-        [TestMethod]
+        [Test]
         public void IsCovering_LargeSoversSmall_Success()
         {
             var large = new Subnet("large", "10.0.0.0/23");
             var small = new Subnet("small", "10.0.1.0/24");
-            Assert.IsTrue(large.IsCovering(small));
+            NUnit.Framework.Assert.IsTrue(large.IsCovering(small));
         }
 
-        [TestMethod]
+        [Test]
         public void IsCovering_SmallCoveringLarge_Fail()
         {
             var large = new Subnet("large", "10.0.0.0/23");
             var small = new Subnet("small", "10.0.1.0/24");
-            Assert.IsFalse(small.IsCovering(large));
+            NUnit.Framework.Assert.IsFalse(small.IsCovering(large));
         }
 
-        [TestMethod]
+        [Test]
         public void IsCovering_SameSubnets_Success()
         {
             var large = new Subnet("large", "10.0.0.0/23");
-            Assert.IsTrue(large.IsCovering(large));
+            NUnit.Framework.Assert.IsTrue(large.IsCovering(large));
         }
 
-        [TestMethod]
+        [Test]
         public void IsCovering_TransitiveCover_Success()
         { 
             var large = new Subnet("large", "10.0.0.0/23");
             var small = new Subnet("small", "10.0.0.0/24");
             var smallest = new Subnet("smallest", "10.0.0.0/30");
-            Assert.IsTrue(large.IsCovering(small));
-            Assert.IsTrue(small.IsCovering(smallest));
-            Assert.IsTrue(large.IsCovering(smallest));
+            NUnit.Framework.Assert.IsTrue(large.IsCovering(small));
+            NUnit.Framework.Assert.IsTrue(small.IsCovering(smallest));
+            NUnit.Framework.Assert.IsTrue(large.IsCovering(smallest));
         }
         #endregion
     }

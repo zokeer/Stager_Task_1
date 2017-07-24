@@ -1,7 +1,7 @@
 ﻿using System;
 using LukeSkywalker.IPNetwork;
 
-namespace Task_1.Models
+namespace DomainModel.Models
 {
     /// <summary>
     /// Класс представления подсетей.
