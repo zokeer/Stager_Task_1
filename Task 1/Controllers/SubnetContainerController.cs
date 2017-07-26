@@ -16,13 +16,13 @@ namespace Task_1.Controllers
         /// <summary>
         /// Сервис для работы с контейнером экземпляров класса Subnet.
         /// </summary>
-        private SubnetContainerManager _subnetContainerManager;
+        private readonly SubnetContainerManager _subnetContainerManager;
 
         /// <summary>
         /// Функция преобразования строковых представлений полей
         /// экземпляра класса Subnet в привычный вид: ddd.ddd.ddd.ddd/d[d].
         /// </summary>
-        private Func<string, string, string> _normalizeSubnetName;
+        private readonly Func<string, string, string> _normalizeSubnetName;
         
         /// <summary>
         /// Конструктор инициализириует функцию преобразования и сервис.

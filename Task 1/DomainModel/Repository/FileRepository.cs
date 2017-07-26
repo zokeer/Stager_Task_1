@@ -18,7 +18,7 @@ namespace DomainModel.Repository
         /// <summary>
         /// Путь до расположения файла с данными.
         /// </summary>
-        private readonly string _repository_path;
+        private readonly string _repositoryPath;
 
         /// <summary>
         /// Конструктор инициализирует путь до файла с данными.
@@ -26,7 +26,7 @@ namespace DomainModel.Repository
         /// <param name="repository_path">Путь до файла с данными.</param>
         public FileRepository(string repository_path)
         {
-            _repository_path = repository_path;
+            _repositoryPath = repository_path;
             _subnets = GetDataFromPhysicalSource();
         }
         
@@ -39,7 +39,7 @@ namespace DomainModel.Repository
         {
             _subnets.Add(new Subnet(id, raw_subnet));
 
-            File.WriteAllText(_repository_path,
+            File.WriteAllText(_repositoryPath,
                 JsonConvert.SerializeObject(
                     _subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}")
                     )
@@ -56,7 +56,7 @@ namespace DomainModel.Repository
             var subnets = GetDataFromPhysicalSource();
 
             subnets.Remove(subnets.Find(subnet => subnet.Id == id));
-            File.WriteAllText(_repository_path,
+            File.WriteAllText(_repositoryPath,
                 JsonConvert.SerializeObject(
                     subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}"))
                     );
@@ -71,7 +71,7 @@ namespace DomainModel.Repository
         /// <returns>Контейнер экземпляров класса Subnet.</returns>
         public List<Subnet> GetDataFromPhysicalSource()
         {
-            var data = File.ReadAllText(_repository_path);
+            var data = File.ReadAllText(_repositoryPath);
 
             _subnets = JsonConvert.DeserializeObject<IEnumerable<string>>(data)
                 .Select(raw_data => new Subnet(raw_data.Split(',')[0], raw_data.Split(',')[1])).ToList();

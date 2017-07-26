@@ -12,7 +12,7 @@ namespace DomainModel.Service
         /// <summary>
         /// Репозиторий, реализующий методы работы с хранилищем данных.
         /// </summary>
-        private IRepository _repository;
+        private readonly IRepository _repository;
 
         /// <summary>
         /// Конструктор инициализирует репозиторий, контейнер подсетей и наполняет его данными из репозитория.
@@ -42,7 +42,7 @@ namespace DomainModel.Service
         {
             if (SubnetValidator.IsValidAddress(raw_subnet) 
                 && SubnetValidator.IsValidMask(raw_subnet) 
-                && SubnetValidator.isValidId(_repository, id))
+                && SubnetValidator.IsValidId(_repository, id))
             {
                 _repository.Create(id, raw_subnet);
             }
@@ -54,7 +54,7 @@ namespace DomainModel.Service
         /// <param name="id">ID сети, которую надо удалить.</param>
         public void Delete(string id)
         {
-            if(SubnetValidator.isValidId(id))
+            if(SubnetValidator.IsValidId(id))
                 _repository.Delete(id);
         }
 

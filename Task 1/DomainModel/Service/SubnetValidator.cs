@@ -53,10 +53,10 @@ namespace DomainModel.Service
         /// <summary>
         /// Проверяет ID на уникальность в наборе, также на соответствение требованиям о длине [0..255].
         /// </summary>
-        /// <param name="subnet_container">Контейнер подсетей.</param>
+        /// <param name="repository">Репозиторий подсетей.</param>
         /// <param name="id">ID, который нужно проверить.</param>
         /// <returns>True/False: является ли ID верным.</returns>
-        public static bool isValidId(IRepository repository, string id)
+        public static bool IsValidId(IRepository repository, string id)
         {
             return !repository.Get().Exists(subnet => subnet.Id == id)
                 && id.Length <= 255
@@ -68,7 +68,7 @@ namespace DomainModel.Service
         /// </summary>
         /// <param name="id">ID, который нужно проверить.</param>
         /// <returns>True/False: является ли ID верным.</returns>
-        public static bool isValidId(string id)
+        public static bool IsValidId(string id)
         {
             return id.Length <= 255
                 && !string.IsNullOrEmpty(id);

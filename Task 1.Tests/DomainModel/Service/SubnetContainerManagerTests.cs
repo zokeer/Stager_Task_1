@@ -15,8 +15,8 @@ namespace Task_1.DomainModel.Service.Tests
         [Test]
         public void GetTest_SameCollections()
         {
-            Mock<IRepository> mock = new Mock<IRepository>();
-            SubnetContainerManager subnet_container_manager = new SubnetContainerManager(mock.Object);
+            var mock = new Mock<IRepository>();
+            var subnet_container_manager = new SubnetContainerManager(mock.Object);
             var test_list = new List<Subnet>
             {
                 new Subnet("4", "192.168.168.0/30"),
