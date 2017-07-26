@@ -19,7 +19,8 @@ namespace Task_1.Controllers
         private SubnetContainerManager _subnetContainerManager;
 
         /// <summary>
-        /// Функция преобразования строковых предсталений полей экземпляра класса Subnet в привычный вид: ddd.ddd.ddd.ddd/d[d].
+        /// Функция преобразования строковых представлений полей
+        /// экземпляра класса Subnet в привычный вид: ddd.ddd.ddd.ddd/d[d].
         /// </summary>
         private Func<string, string, string> _normalizeSubnetName;
         
@@ -46,7 +47,7 @@ namespace Task_1.Controllers
         /// <summary>
         /// Функция получает все Subnet, которые предоставляет сервис.
         /// </summary>
-        /// <returns>Json-представление маскированных подсетей и дополнительные поля для DataTables</returns>
+        /// <returns>Json-представление маскированных подсетей и дополнительные поля для DataTables.</returns>
         [HttpGet]
         public ActionResult Get()
         {
@@ -54,7 +55,8 @@ namespace Task_1.Controllers
             IEnumerable<object> masked_subnets = subnets.Select((subnet, index) => new
             {
                 subnet.Id,
-                MaskedAddress = _normalizeSubnetName(subnet.Network.Network.ToString(), subnet.Network.Cidr.ToString()),
+                MaskedAddress = _normalizeSubnetName(subnet.Network.Network.ToString(),
+                    subnet.Network.Cidr.ToString()),
                 DT_RowId = subnet.Id
 
             });
@@ -71,7 +73,7 @@ namespace Task_1.Controllers
         /// <param name="id">ID новой подсети</param>
         /// <param name="address">Адрес новой подсети</param>
         /// <param name="mask">Маска новой подсети</param>
-        /// <returns>Json-представление маскированных подсетей и дополнительные поля для DataTables</returns>
+        /// <returns>Json-представление маскированных подсетей и дополнительные поля для DataTables.</returns>
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateSubnet(string id, string address, string mask)
         {
@@ -83,7 +85,7 @@ namespace Task_1.Controllers
         /// Передаёт ответственность за удаление подсети сервису.
         /// </summary>
         /// <param name="id">ID сети, которую надо удалить</param>
-        /// <returns>Json-представление маскированных подсетей и дополнительные поля для DataTables</returns>
+        /// <returns>Json-представление маскированных подсетей и дополнительные поля для DataTables.</returns>
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult DeleteSubnet(string id)
         {
@@ -94,11 +96,11 @@ namespace Task_1.Controllers
         /// <summary>
         /// Передаёт ответственность за изменение подсети сервису.
         /// </summary>
-        /// <param name="old_id">ID той сети, чьи параметры нужно изменить</param>
-        /// <param name="new_id">ID новой подсети</param>
-        /// <param name="address">Адрес новой подсети</param>
-        /// <param name="mask">Маска новой подсети</param>
-        /// <returns>Json-представление маскированных подсетей и дополнительные поля для DataTables</returns>
+        /// <param name="old_id">ID той сети, чьи параметры нужно изменить.</param>
+        /// <param name="new_id">ID новой подсети.</param>
+        /// <param name="address">Адрес новой подсети.</param>
+        /// <param name="mask">Маска новой подсети.</param>
+        /// <returns>Json-представление маскированных подсетей и дополнительные поля для DataTables.</returns>
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditSubnet(string old_id, string new_id, string address, string mask)
         {
@@ -109,21 +111,27 @@ namespace Task_1.Controllers
         /// <summary>
         /// Получает минимальное покрытие подсетей из класса-сервиса.
         /// </summary>
-        /// <returns>Json-представление маскированных подсетей минимального покрытия и дополнительные поля для DataTables</returns>
+        /// <returns>
+        /// Json-представление маскированных подсетей минимального покрытия
+        /// и дополнительные поля для DataTables.
+        /// </returns>
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult GetCoverage()
         {
             var coverage = SubnetCoverageManager.GetMinimalCoverage(_subnetContainerManager.Get());
             var json_acceptable_list = new List<object>();
+
             foreach (var key in coverage.Keys)
             {
                 json_acceptable_list.Add(new
                 {
                     KeyId = key.Id,
-                    KeyMaskedAddress = _normalizeSubnetName(key.Network.Network.ToString(), key.Network.Cidr.ToString()),
+                    KeyMaskedAddress = _normalizeSubnetName(key.Network.Network.ToString(),
+                        key.Network.Cidr.ToString()),
                     Children = coverage[key].Select(subnet => subnet.Id)
                 });                
             }
+
             return Json(new
             {
                 data = json_acceptable_list,

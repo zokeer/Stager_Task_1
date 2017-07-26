@@ -18,9 +18,10 @@ namespace Task_1.DomainModel.Service.Tests
             {
                 {large, new List<Subnet> {large, small } }
             };
+
             foreach (var key in expected.Keys)
             {
-                NUnit.Framework.CollectionAssert.AreEquivalent(expected[key], result[key]);
+                CollectionAssert.AreEquivalent(expected[key], result[key]);
             }
 
         }
@@ -36,9 +37,10 @@ namespace Task_1.DomainModel.Service.Tests
             {
                 {large, new List<Subnet> {large, small, small_2 } }
             };
+
             foreach (var key in expected.Keys)
             {
-                NUnit.Framework.CollectionAssert.AreEquivalent(expected[key], result[key]);
+                CollectionAssert.AreEquivalent(expected[key], result[key]);
             }
 
         }
@@ -56,9 +58,10 @@ namespace Task_1.DomainModel.Service.Tests
                 {large_1, new List<Subnet> { large_1, small_1 } },
                 {large_2, new List<Subnet> { large_2, small_2 } }
             };
+
             foreach (var key in expected.Keys)
             {
-                NUnit.Framework.CollectionAssert.AreEquivalent(expected[key], result[key]);
+                CollectionAssert.AreEquivalent(expected[key], result[key]);
             }
         }
 
@@ -73,9 +76,10 @@ namespace Task_1.DomainModel.Service.Tests
             {
                 {large, new List<Subnet> {large, small, smallest } }
             };
+
             foreach (var key in expected.Keys)
             {
-                NUnit.Framework.CollectionAssert.AreEquivalent(expected[key], result[key]);
+                CollectionAssert.AreEquivalent(expected[key], result[key]);
             }
         }
 
@@ -89,9 +93,10 @@ namespace Task_1.DomainModel.Service.Tests
             {
                 {large_1, new List<Subnet> { large_1, large_2 } }
             };
+
             foreach (var key in expected.Keys)
             {
-                NUnit.Framework.CollectionAssert.AreEquivalent(expected[key], result[key]);
+                CollectionAssert.AreEquivalent(expected[key], result[key]);
             }
         }
     }

@@ -14,7 +14,7 @@ namespace DomainModel.Repository
         /// <summary>
         /// Контейнер Подсетей.
         /// </summary>
-        private List<Subnet> Subnets;
+        private List<Subnet> _subnets;
         /// <summary>
         /// Путь до расположения файла с данными.
         /// </summary>
@@ -27,9 +27,9 @@ namespace DomainModel.Repository
         public FileRepository(string repository_path)
         {
             _repository_path = repository_path;
-            Subnets = GetDataFromPhysicalSource();
+            _subnets = GetDataFromPhysicalSource();
         }
-
+        
         /// <summary>
         /// Записывает в файл и в контейнер новую подсеть в формате Json.
         /// </summary>
@@ -37,14 +37,13 @@ namespace DomainModel.Repository
         /// <param name="raw_subnet">Подсеть в строковом формате.</param>
         public void Create(string id, string raw_subnet)
         {
-            var subnets = GetDataFromPhysicalSource();
-            subnets.Add(new Subnet(id, raw_subnet));
+            _subnets.Add(new Subnet(id, raw_subnet));
+
             File.WriteAllText(_repository_path,
                 JsonConvert.SerializeObject(
-                    subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}")
+                    _subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}")
                     )
                 );
-            Subnets.Add(new Subnet(id, raw_subnet));
 
         }
 
@@ -55,23 +54,29 @@ namespace DomainModel.Repository
         public void Delete(string id)
         {
             var subnets = GetDataFromPhysicalSource();
+
             subnets.Remove(subnets.Find(subnet => subnet.Id == id));
             File.WriteAllText(_repository_path,
                 JsonConvert.SerializeObject(
                     subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}"))
                     );
-            Subnets = Subnets.Where(subnet => subnet.Id != id).ToList();
+
+            _subnets = _subnets.Where(subnet => subnet.Id != id).ToList();
         }
 
         /// <summary>
         /// Получает все записи из файла. Преобразует их в экземпляры класса Subnet, складывает в контейнер.
+        /// Используется для вынуждения синхронизации виртуального контейнера с действительным файлом.
         /// </summary>
         /// <returns>Контейнер экземпляров класса Subnet.</returns>
         public List<Subnet> GetDataFromPhysicalSource()
         {
             var data = File.ReadAllText(_repository_path);
-            return JsonConvert.DeserializeObject<IEnumerable<string>>(data)
+
+            _subnets = JsonConvert.DeserializeObject<IEnumerable<string>>(data)
                 .Select(raw_data => new Subnet(raw_data.Split(',')[0], raw_data.Split(',')[1])).ToList();
+
+            return _subnets;
         }
 
         /// <summary>
@@ -81,7 +86,7 @@ namespace DomainModel.Repository
         /// <returns>Контейнер экземпляров класса Subnet</returns>
         public List<Subnet> Get()
         {
-            return Subnets;
+            return _subnets;
         }
     }
 }

@@ -22,6 +22,11 @@ namespace DomainModel.Models
             return Id.GetHashCode();
         }
 
+        /// <summary>
+        /// Subnet равна другой Subnet если у них одинаковый ID и Маскированный Адрес Сети.
+        /// </summary>
+        /// <param name="other">Другая Сеть.</param>
+        /// <returns>True/False: Равны ли подсети.</returns>
         public override bool Equals(object other)
         {
             if (!(other is Subnet))
@@ -35,15 +40,15 @@ namespace DomainModel.Models
         /// Передаёт ответственность методу Contains у класса IPNetwork.
         /// </summary>
         /// <param name="candidate_subnet">Предположительно меньшая подсеть.</param>
-        /// <returns>True/False: Покрывает ли.</returns>
+        /// <returns>True/False: Покрывает ли эта подсеть данную.</returns>
         public bool IsCovering(Subnet candidate_subnet)
         {
             return IPNetwork.Contains(Network, candidate_subnet.Network);
         }
 
         /// <summary>
-        /// Сравнение определено для сортировки. Если одна сеть покрывает другую, то она считается "больше".
-        /// Если никакая из сетей не покрывает другую, считаем их "несравнимыми".
+        /// Если одна сеть покрывает другую, то она считается "больше".
+        /// Если никакая из сетей не покрывает другую, они "несравнимы".
         /// </summary>
         /// <param name="obj">Другая сеть.</param>
         /// <returns>Возвращаемое значение согласовано с требованиями IComparable</returns>

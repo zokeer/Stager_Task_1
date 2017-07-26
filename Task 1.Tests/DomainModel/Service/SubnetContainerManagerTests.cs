@@ -29,7 +29,7 @@ namespace Task_1.DomainModel.Service.Tests
 
             foreach(var test_subnet in test_list)
             {
-                NUnit.Framework.Assert.IsTrue(subnet_container_manager.Get().Contains(test_subnet));
+                Assert.IsTrue(subnet_container_manager.Get().Contains(test_subnet));
             }
         }
 
@@ -48,7 +48,7 @@ namespace Task_1.DomainModel.Service.Tests
 
             mock.Setup(m => m.Get()).Returns(test_list.Skip(2).ToList());
 
-            NUnit.Framework.Assert.AreNotEqual(test_list.Count, subnet_container_manager.Get().Count);
+            Assert.AreNotEqual(test_list.Count, subnet_container_manager.Get().Count);
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace Task_1.DomainModel.Service.Tests
 
             foreach (var test_subnet in test_list)
             {
-                NUnit.Framework.Assert.IsFalse(subnet_container_manager.Get().Contains(test_subnet));
+                Assert.IsFalse(subnet_container_manager.Get().Contains(test_subnet));
             }
         }
 
@@ -105,7 +105,7 @@ namespace Task_1.DomainModel.Service.Tests
 
             foreach (var test_subnet in test_list)
             {
-                NUnit.Framework.Assert.IsFalse(subnet_container_manager.Get().Contains(test_subnet));
+                Assert.IsFalse(subnet_container_manager.Get().Contains(test_subnet));
             }
         }
         #endregion
@@ -117,6 +117,7 @@ namespace Task_1.DomainModel.Service.Tests
             SubnetContainerManager subnet_container_manager = new SubnetContainerManager(mock.Object);
             mock.Setup(m => m.Get()).Returns(new List<Subnet>());
             mock.Setup(m => m.Create(It.IsAny<string>(), It.IsAny<string>()));
+
             subnet_container_manager.Create("new_ID", "192.168.168.0/24");
             mock.Verify(m => m.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
@@ -128,6 +129,7 @@ namespace Task_1.DomainModel.Service.Tests
             SubnetContainerManager subnet_container_manager = new SubnetContainerManager(mock.Object);
             mock.Setup(m => m.Get()).Returns(new List<Subnet> {new Subnet("new_ID", "192.168.168.0/24") });
             mock.Setup(m => m.Create(It.IsAny<string>(), It.IsAny<string>()));
+
             subnet_container_manager.Create("new_ID", "192.168.168.0/24");
             mock.Verify(m => m.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
@@ -139,6 +141,7 @@ namespace Task_1.DomainModel.Service.Tests
             SubnetContainerManager subnet_container_manager = new SubnetContainerManager(mock.Object);
             mock.Setup(m => m.Get()).Returns(new List<Subnet> { new Subnet("new_ID", "192.168.168.0/24") });
             mock.Setup(m => m.Create(It.IsAny<string>(), It.IsAny<string>()));
+
             subnet_container_manager.Create("new_ID", "192.168/24");
             mock.Verify(m => m.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
@@ -150,6 +153,7 @@ namespace Task_1.DomainModel.Service.Tests
             SubnetContainerManager subnet_container_manager = new SubnetContainerManager(mock.Object);
             mock.Setup(m => m.Get()).Returns(new List<Subnet> { new Subnet("new_ID", "192.168.168.0/24") });
             mock.Setup(m => m.Create(It.IsAny<string>(), It.IsAny<string>()));
+
             subnet_container_manager.Create("new_ID", "192.168.168.0/50");
             mock.Verify(m => m.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
@@ -161,6 +165,7 @@ namespace Task_1.DomainModel.Service.Tests
             Mock<IRepository> mock = new Mock<IRepository>();
             SubnetContainerManager subnet_container_manager = new SubnetContainerManager(mock.Object);
             mock.Setup(m => m.Delete(It.IsAny<string>()));
+
             subnet_container_manager.Delete("new_ID");
             mock.Verify(m => m.Delete(It.IsAny<string>()), Times.Once);
         }
@@ -171,6 +176,7 @@ namespace Task_1.DomainModel.Service.Tests
             Mock<IRepository> mock = new Mock<IRepository>();
             SubnetContainerManager subnet_container_manager = new SubnetContainerManager(mock.Object);
             mock.Setup(m => m.Delete(It.IsAny<string>()));
+
             subnet_container_manager.Delete(new string('*', 256));
             mock.Verify(m => m.Delete(It.IsAny<string>()), Times.Never);
         }
@@ -181,6 +187,7 @@ namespace Task_1.DomainModel.Service.Tests
             Mock<IRepository> mock = new Mock<IRepository>();
             SubnetContainerManager subnet_container_manager = new SubnetContainerManager(mock.Object);
             mock.Setup(m => m.Delete(It.IsAny<string>()));
+
             subnet_container_manager.Delete("");
             mock.Verify(m => m.Delete(It.IsAny<string>()), Times.Never);
         }

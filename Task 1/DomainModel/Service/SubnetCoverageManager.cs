@@ -19,9 +19,11 @@ namespace DomainModel.Service
         /// значение - список подсетей, которые покрывает подсеть-ключ.
         /// </returns>
         public static Dictionary<Subnet, List<Subnet>> GetMinimalCoverage(List<Subnet> subnet_container)
-        {
+        { 
+            // Топологическая сортировка, теперь "наверху" списка будут большие подсети.
             subnet_container.Sort();
-            subnet_container.Reverse(); //Топологическая сортировка, теперь "наверху" списка будут большие подсети.
+            subnet_container.Reverse();
+
             var coverage_dict = new Dictionary<Subnet, List<Subnet>>();
             var covered_subnets = new List<Subnet>();
             foreach (var subnet in subnet_container)
@@ -30,6 +32,7 @@ namespace DomainModel.Service
                 covered_subnets.AddRange(coverage_dict[subnet]);
             }
             coverage_dict = RemoveEmptyCoverages(coverage_dict);
+
             return coverage_dict;
         }
 
