@@ -28,6 +28,14 @@ namespace DomainModel.Repository
         void Delete(string id);
 
         /// <summary>
+        /// Изменяет сеть по old_id на сеть (new_id, raw_subnet).
+        /// </summary>
+        /// <param name="old_id">ID той сети, чьи параметры нужно изменить.</param>
+        /// <param name="new_id">ID новой подсети.</param>
+        /// <param name="raw_subnet">Строковое представление подсети.</param>
+        void Edit(string old_id, string new_id, string raw_subnet);
+
+        /// <summary>
         /// Более быстрый метод, нежели GetDataFromPhysicalSource. 
         /// Работает только с виртуальным хранилищем.
         /// </summary>

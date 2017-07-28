@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using DomainModel.Models;
+using Task_1.DomainModel.Repository;
 
 namespace Task_1.Controllers
 {
@@ -30,6 +32,7 @@ namespace Task_1.Controllers
         public SubnetContainerController()
         {
             var repository = new FileRepository(HostingEnvironment.ApplicationPhysicalPath + "test.txt");
+            //var repository = new DBRepository("PUT CONNECTION STRING HERE");
             _normalizeSubnetName = (id, mask) => $"{id}/{mask}";
             _subnetContainerManager = new SubnetContainerManager(repository);
         }        
@@ -73,24 +76,24 @@ namespace Task_1.Controllers
         /// <param name="id">ID новой подсети</param>
         /// <param name="address">Адрес новой подсети</param>
         /// <param name="mask">Маска новой подсети</param>
-        /// <returns>Json-представление маскированных подсетей и дополнительные поля для DataTables.</returns>
+        /// <returns>Информация о прохождении операции в формате JSON.</returns>
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateSubnet(string id, string address, string mask)
         {
-            _subnetContainerManager.Create(id, address + '/' + mask);
-            return Get();
+            var log =_subnetContainerManager.Create(id, address + '/' + mask);
+            return CreateJsonResult(log);
         }
 
         /// <summary>
         /// Передаёт ответственность за удаление подсети сервису.
         /// </summary>
         /// <param name="id">ID сети, которую надо удалить</param>
-        /// <returns>Json-представление маскированных подсетей и дополнительные поля для DataTables.</returns>
+        /// <returns>Информация о прохождении операции в формате JSON.</returns>
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult DeleteSubnet(string id)
         {
-            _subnetContainerManager.Delete(id);
-            return Get();
+            var log = _subnetContainerManager.Delete(id);
+            return CreateJsonResult(log);
         }
 
         /// <summary>
@@ -100,12 +103,12 @@ namespace Task_1.Controllers
         /// <param name="new_id">ID новой подсети.</param>
         /// <param name="address">Адрес новой подсети.</param>
         /// <param name="mask">Маска новой подсети.</param>
-        /// <returns>Json-представление маскированных подсетей и дополнительные поля для DataTables.</returns>
+        /// <returns>Информация о прохождении операции в формате JSON.</returns>
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditSubnet(string old_id, string new_id, string address, string mask)
         {
-            _subnetContainerManager.Edit(old_id, new_id, address + '/' + mask);
-            return Get();
+            var log =_subnetContainerManager.Edit(old_id, new_id, address + '/' + mask);
+            return CreateJsonResult(log);
         }
 
         /// <summary>
@@ -138,6 +141,16 @@ namespace Task_1.Controllers
                 recordsTotal = json_acceptable_list.Count,
                 recordsFiltered = json_acceptable_list.Count
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Преобразует экземпляр класса ValidationLog в JSON.
+        /// </summary>
+        /// <param name="log">Информация, которую нужно преобразовать.</param>
+        /// <returns>Json-представление переданной информации.</returns>
+        private JsonResult CreateJsonResult(ValidationLog log)
+        {
+            return Json(log.ToString(), JsonRequestBehavior.AllowGet);
         }
     }
 }

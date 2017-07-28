@@ -65,6 +65,18 @@ namespace DomainModel.Repository
         }
 
         /// <summary>
+        /// Метод выполняет последовательный вызов Delete и Create для изменения подсети.
+        /// </summary>
+        /// <param name="old_id">ID той сети, чьи параметры нужно изменить.</param>
+        /// <param name="new_id">ID новой подсети.</param>
+        /// <param name="raw_subnet">Строковое представление подсети.</param>
+        public void Edit(string old_id, string new_id, string raw_subnet)
+        {
+            Delete(old_id);
+            Create(new_id, raw_subnet);
+        }
+
+        /// <summary>
         /// Получает все записи из файла. Преобразует их в экземпляры класса Subnet, складывает в контейнер.
         /// Используется для вынуждения синхронизации виртуального контейнера с действительным файлом.
         /// </summary>

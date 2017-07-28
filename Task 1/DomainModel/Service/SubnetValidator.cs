@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Net;
+using DomainModel.Models;
 using LukeSkywalker.IPNetwork;
 using DomainModel.Repository;
+using Microsoft.Ajax.Utilities;
 
 namespace DomainModel.Service
 {
@@ -10,22 +13,22 @@ namespace DomainModel.Service
     public static class SubnetValidator
     {
         /// <summary>
-        /// Проверяет адрес подсети на соответствие виду d[dd].d[dd].d[dd].d[dd]/d[d].
-        /// Проверку осущесвляет передачей ответсвенности методу Parse класса IPNetwork.
+        /// Проверяет адрес подсети на соответствие виду d[dd].d[dd].d[dd].d[dd].
+        /// Проверку осущесвляет передачей ответсвенности методу Parse класса IPAddress.
         /// </summary>
         /// <param name="raw_subnet">Строковое представление подсети.</param>
-        /// <returns>True/False: является ли адрес верным.</returns>
-        public static bool IsValidAddress(string raw_subnet)
+        /// <returns>Информация о прохождении операции.</returns>
+        public static ValidationLog IsValidAddress(string raw_subnet)
         {
             try
             {
                 var address = raw_subnet.Split('/')[0];
-                var possible_address = IPNetwork.Parse(address);
-                return true;
+                var possible_address = IPAddress.Parse(address);
+                return new ValidationLog(SubnetField.Address, LogInfo.NoErrors);
             }
             catch (Exception)
             {
-                return false;
+                return new ValidationLog(SubnetField.Address, LogInfo.Invalid);
             }
     }
         /// <summary>
@@ -33,8 +36,8 @@ namespace DomainModel.Service
         /// Проверку осущесвляет передачей ответсвенности методу Parse класса IPNetwork.
         /// </summary>
         /// <param name="raw_subnet">Строковое представление подсети.</param>
-        /// <returns>True/False: является ли адрес верным.</returns>
-        public static bool IsValidMask(string raw_subnet)
+        /// <returns>Информация о прохождении операции.</returns>
+        public static ValidationLog IsValidMask(string raw_subnet)
         {
             try
             {
@@ -42,11 +45,11 @@ namespace DomainModel.Service
                 if (string.IsNullOrEmpty(mask) || mask.Length > 2)
                     throw new Exception();
                 var possible_subnet = IPNetwork.Parse(raw_subnet);
-                return true;
+                return new ValidationLog(SubnetField.Mask, LogInfo.NoErrors);
             }
             catch (Exception)
             {
-                return false;
+                return new ValidationLog(SubnetField.Mask, LogInfo.Invalid);
             }
         }
 
@@ -55,23 +58,27 @@ namespace DomainModel.Service
         /// </summary>
         /// <param name="repository">Репозиторий подсетей.</param>
         /// <param name="id">ID, который нужно проверить.</param>
-        /// <returns>True/False: является ли ID верным.</returns>
-        public static bool IsValidId(IRepository repository, string id)
+        /// <returns>Информация о прохождении операции.</returns>
+        public static ValidationLog IsValidId(IRepository repository, string id)
         {
-            return !repository.Get().Exists(subnet => subnet.Id == id)
-                && id.Length <= 255
-                && !string.IsNullOrEmpty(id);
+            var log = IsValidId(id);
+            if (log.LogInfo != LogInfo.NoErrors)
+                return log;
+            return repository.Get().Exists(subnet => subnet.Id == id) ?
+                new ValidationLog(SubnetField.Id, LogInfo.NotUnique) :
+                new ValidationLog(SubnetField.Id, LogInfo.NotExists);
         }
 
         /// <summary>
         /// Проверяет соответствение требованиям о длине [0..255].
         /// </summary>
         /// <param name="id">ID, который нужно проверить.</param>
-        /// <returns>True/False: является ли ID верным.</returns>
-        public static bool IsValidId(string id)
+        /// <returns>Информация о прохождении операции.</returns>
+        public static ValidationLog IsValidId(string id)
         {
-            return id.Length <= 255
-                && !string.IsNullOrEmpty(id);
+            if (id.Length <= 255 && !string.IsNullOrEmpty(id))
+                return new ValidationLog(SubnetField.Id, LogInfo.NoErrors);
+            return new ValidationLog(SubnetField.Id, LogInfo.Invalid);
         }
     }
 }

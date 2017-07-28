@@ -38,37 +38,56 @@ namespace DomainModel.Service
         /// </summary>
         /// <param name="id">ID новой подсети.</param>
         /// <param name="raw_subnet">Строковое представление подсети.</param>
-        public void Create(string id, string raw_subnet)
+        /// <returns> Информация об успехе операции создания.</returns>
+        public ValidationLog Create(string id, string raw_subnet)
         {
-            if (SubnetValidator.IsValidAddress(raw_subnet) 
-                && SubnetValidator.IsValidMask(raw_subnet) 
-                && SubnetValidator.IsValidId(_repository, id))
-            {
-                _repository.Create(id, raw_subnet);
-            }
+            var id_log = SubnetValidator.IsValidId(_repository, id);
+            if (id_log.LogInfo != LogInfo.NotExists)
+                return id_log;
+            var address_log = SubnetValidator.IsValidAddress(raw_subnet);
+            if (address_log.LogInfo != LogInfo.NoErrors)
+                return address_log;
+            var mask_log = SubnetValidator.IsValidMask(raw_subnet);
+            if (mask_log.LogInfo != LogInfo.NoErrors)
+                return mask_log;
+            _repository.Create(id, raw_subnet);
+            return new ValidationLog(SubnetField.Everything, LogInfo.NoErrors);
+
         }
 
         /// <summary>
         /// Удаляет подсеть из контейнера подсетей и вызывает метод удаления подсети у репозитория.
         /// </summary>
         /// <param name="id">ID сети, которую надо удалить.</param>
-        public void Delete(string id)
+        /// <returns> Информация об успехе операции удаления.</returns>
+        public ValidationLog Delete(string id)
         {
-            if(SubnetValidator.IsValidId(id))
-                _repository.Delete(id);
+            var id_log = SubnetValidator.IsValidId(_repository, id);
+            if (id_log.LogInfo == LogInfo.NotExists)
+                return id_log;
+            _repository.Delete(id);
+            return new ValidationLog(SubnetField.Everything, LogInfo.NoErrors);
         }
 
         /// <summary>
-        /// "Ленивый" Edit: вызывает удаление старой подсети и добавление новой.
+        /// Изменяет сеть по old_id на сеть (new_id, raw_subnet).
         /// </summary>
-        /// <param name="old_id">ID той сети, чьи параметры нужно изменить</param>
-        /// <param name="new_id">ID новой подсети</param>
+        /// <param name="old_id">ID той сети, чьи параметры нужно изменить.</param>
+        /// <param name="new_id">ID новой подсети.</param>
         /// <param name="raw_subnet">Строковое представление подсети.</param>
-        public void Edit(string old_id, string new_id, string raw_subnet)
+        /// <returns> Информация об успехе операции изменения.</returns>
+        public ValidationLog Edit(string old_id, string new_id, string raw_subnet)
         {
-            Delete(old_id);
-            Create(new_id, raw_subnet);
+            var old_id_log = SubnetValidator.IsValidId(_repository, old_id);
+            if (old_id_log.LogInfo == LogInfo.NotUnique)
+            {
+                var new_id_log = SubnetValidator.IsValidId(_repository, new_id);
+                if (new_id_log.LogInfo != LogInfo.NotExists && new_id != old_id)
+                    return new_id_log;
+                _repository.Edit(old_id, new_id, raw_subnet);
+                return new ValidationLog(SubnetField.Everything, LogInfo.NoErrors);
+            }
+            return old_id_log;
         }
-
     }
 }

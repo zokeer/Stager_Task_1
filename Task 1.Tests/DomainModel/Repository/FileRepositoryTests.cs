@@ -11,9 +11,9 @@ namespace Task_1.DomainModel.Repository.Tests
     public class FileRepositoryTests
     {
         private readonly string _rigthFilePath = Path.GetDirectoryName(typeof(FileRepositoryTests).Assembly.Location) + "\\rigth_test.txt";
-        private string _notExistingFile = "not_existing_file_test.txt";
+        private readonly string _notExistingFile = "not_existing_file_test.txt";
         private readonly string _wrongDataFile = Path.GetDirectoryName(typeof(FileRepositoryTests).Assembly.Location) + "\\wrong_data_test.txt";
-        private string _defaultData = "[\"1, 192.168.168.0/23\", \"2, 192.168.168.0/24\"]";
+        private readonly string _defaultData = "[\"1, 192.168.168.0/23\", \"2, 192.168.168.0/24\"]";
         #region ConstuctorTests
         [Test]
         public void FileRepository_RightFile_NoExceptions()

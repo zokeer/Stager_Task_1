@@ -34,9 +34,10 @@
         '#deleteButton',
         function() {
             var data = table.row($(this).parents('tr')).data();
-            $.post("/SubnetContainer/DeleteSubnet", { id: data.Id })
-                .done(function(data) {
-                    table.ajax.reload();
+            $.post("/SubnetContainer/DeleteSubnet", { id: data.Id }, function (data) {
+                if (!data.includes("fine"))
+                    alert(data);
+                table.ajax.reload();
                 });
         });
 
@@ -52,29 +53,32 @@
             });
             $('#submit_editted_subnet').click(function() {
                 $.post("/SubnetContainer/EditSubnet",
-                        {
-                            old_id: data.Id,
-                            new_id: $('#edit_id').val(),
-                            address: $('#edit_address').val(),
-                            mask: $('#edit_mask').val()
-                        })
-                    .done(function (data) {
+                    {
+                        old_id: data.Id,
+                        new_id: $('#edit_id').val(),
+                        address: $('#edit_address').val(),
+                        mask: $('#edit_mask').val()
+                    }, function (data) {
+                        if (!data.includes("fine"))
+                            alert(data);
                         $('#editModal').css("display", "none");
                         table.ajax.reload();
-                    });
+                });
             });
         });
 
     $('#submit_new_subnet').click(function() {
         $.post("/SubnetContainer/CreateSubnet",
-                {
-                    id: $('#new_id').val(),
-                    address: $('#new_address').val(),
-                    mask: $('#new_mask').val()
-                })
-            .done(function(data) {
+            {
+                id: $('#new_id').val(),
+                address: $('#new_address').val(),
+                mask: $('#new_mask').val()
+            }, function (data) {
+                console.info(typeof data);
+                if (!data.includes("fine"))
+                    alert(data);
                 table.ajax.reload();
-            });
+         });
     });
 
     $('#getCoverage').click(function () {
