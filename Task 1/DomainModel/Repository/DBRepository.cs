@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using DomainModel.Models;
 using DomainModel.Repository;
 
@@ -31,8 +29,8 @@ namespace Task_1.DomainModel.Repository
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    string id = reader.GetValue(0).ToString();
-                    string network = reader.GetValue(1).ToString();
+                    var id = reader.GetValue(0).ToString();
+                    var network = reader.GetValue(1).ToString();
 
                     subnets.Add(new Subnet(id, network));
                 }

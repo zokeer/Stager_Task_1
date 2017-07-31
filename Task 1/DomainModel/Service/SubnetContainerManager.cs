@@ -1,6 +1,8 @@
-﻿using DomainModel.Models;
+﻿using System;
+using DomainModel.Models;
 using DomainModel.Repository;
 using System.Collections.Generic;
+using System.Data.Entity.ModelConfiguration.Configuration;
 
 namespace DomainModel.Service
 {
@@ -20,6 +22,8 @@ namespace DomainModel.Service
         /// <param name="repository">Репозиторий, реализующий методы работы с хранилищем данных.</param>
         public SubnetContainerManager(IRepository repository)
         {
+            if (repository == null)
+                throw new ArgumentNullException(nameof(repository));
             _repository = repository;
         }
 
@@ -63,7 +67,7 @@ namespace DomainModel.Service
         public ValidationLog Delete(string id)
         {
             var id_log = SubnetValidator.IsValidId(_repository, id);
-            if (id_log.LogInfo == LogInfo.NotExists)
+            if (id_log.LogInfo != LogInfo.NotUnique)
                 return id_log;
             _repository.Delete(id);
             return new ValidationLog(SubnetField.Everything, LogInfo.NoErrors);
@@ -84,6 +88,12 @@ namespace DomainModel.Service
                 var new_id_log = SubnetValidator.IsValidId(_repository, new_id);
                 if (new_id_log.LogInfo != LogInfo.NotExists && new_id != old_id)
                     return new_id_log;
+                var address_log = SubnetValidator.IsValidAddress(raw_subnet);
+                if (address_log.LogInfo != LogInfo.NoErrors)
+                    return address_log;
+                var mask_log = SubnetValidator.IsValidMask(raw_subnet);
+                if (mask_log.LogInfo != LogInfo.NoErrors)
+                    return mask_log;
                 _repository.Edit(old_id, new_id, raw_subnet);
                 return new ValidationLog(SubnetField.Everything, LogInfo.NoErrors);
             }

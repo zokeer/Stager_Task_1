@@ -27,17 +27,22 @@
 </div>
 
 <div class="create_editor">
-    <p>Введите Идентификатор Сети</p>
+    <p>Введите Идентификатор Сети (Идентификатор должен быть уникален, длины не более 255 символов)</p>
     <input type="text" id="new_id" placeholder="ID"/>
     <br/>
-    <p>Введите Адрес Сети</p>
+    <p>Введите Адрес Сети (Например, 224.10.0.2)</p>
     <input type="text" id="new_address" placeholder="d[dd].d[dd].d[dd].d[dd]"/>
     <br/>
-    <p>Введите Маску Сети</p>
+    <p>Введите Маску Сети (Число от 0 до 32)</p>
     <input type="text" id="new_mask" placeholder="d[d]"/>
     <br/>
     <button id="submit_new_subnet">Добавить Сеть</button>
     <br/>
+</div>
+
+<div id="log_block">
+    <label>Операция завершилась с результатом:</label>
+    <label id="log_label">Не было произведено операций.</label>
 </div>
 
 <button id="getCoverage">Построить Минимальное Покрытие</button>
@@ -56,13 +61,14 @@
 
 <div id="editModal">
     <div class="create_editor modal-content">
-        <p>Введите Идентификатор Сети</p>
+        <p>Введите Идентификатор Сети (Идентификатор уникален, но может совпадать
+         с идентификатором изменяемого поля, длины не более 255 символов)</p>
         <input type="text" id="edit_id"  placeholder="ID" />
         <br />
-        <p>Введите Адрес Сети</p>
+        <p>Введите Адрес Сети (Например, 224.10.0.2)</p>
         <input type="text" id="edit_address" placeholder="d[dd].d[dd].d[dd].d[dd]" />
         <br />
-        <p>Введите Маску Сети</p>
+        <p>Введите Маску Сети (Число от 0 до 32)</p>
         <input type="text" id="edit_mask" placeholder="d[d]" />
         <br />
         <button id="submit_editted_subnet">Изменить Сеть</button>

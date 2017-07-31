@@ -3,7 +3,7 @@ using System.Net;
 using DomainModel.Models;
 using LukeSkywalker.IPNetwork;
 using DomainModel.Repository;
-using Microsoft.Ajax.Utilities;
+using Microsoft.Owin.Security.Provider;
 
 namespace DomainModel.Service
 {
@@ -20,17 +20,15 @@ namespace DomainModel.Service
         /// <returns>Информация о прохождении операции.</returns>
         public static ValidationLog IsValidAddress(string raw_subnet)
         {
-            try
-            {
-                var address = raw_subnet.Split('/')[0];
-                var possible_address = IPAddress.Parse(address);
-                return new ValidationLog(SubnetField.Address, LogInfo.NoErrors);
-            }
-            catch (Exception)
-            {
+            IPAddress test_address;
+            var raw_address = raw_subnet.Split('/')[0];
+            if (string.IsNullOrEmpty(raw_address) || raw_address.Length > 15)
                 return new ValidationLog(SubnetField.Address, LogInfo.Invalid);
-            }
-    }
+            return IPAddress.TryParse(raw_address, out test_address) ? 
+                new ValidationLog(SubnetField.Address, LogInfo.NoErrors) : 
+                new ValidationLog(SubnetField.Address, LogInfo.Invalid);
+        }
+
         /// <summary>
         /// Проверяет маску на соответствие виду d[d].
         /// Проверку осущесвляет передачей ответсвенности методу Parse класса IPNetwork.
@@ -39,18 +37,15 @@ namespace DomainModel.Service
         /// <returns>Информация о прохождении операции.</returns>
         public static ValidationLog IsValidMask(string raw_subnet)
         {
-            try
-            {
-                var mask = raw_subnet.Split('/')[1];
-                if (string.IsNullOrEmpty(mask) || mask.Length > 2)
-                    throw new Exception();
-                var possible_subnet = IPNetwork.Parse(raw_subnet);
-                return new ValidationLog(SubnetField.Mask, LogInfo.NoErrors);
-            }
-            catch (Exception)
-            {
+            var mask = raw_subnet.Split('/')[1];
+            if (string.IsNullOrEmpty(mask) || mask.Length > 2)
                 return new ValidationLog(SubnetField.Mask, LogInfo.Invalid);
-            }
+            int int_mask;
+            if (!int.TryParse(mask, out int_mask))
+                return new ValidationLog(SubnetField.Mask, LogInfo.Invalid);
+            if (int_mask < 0 || int_mask > 32)
+                return new ValidationLog(SubnetField.Mask, LogInfo.Invalid);
+            return new ValidationLog(SubnetField.Mask, LogInfo.NoErrors);
         }
 
         /// <summary>

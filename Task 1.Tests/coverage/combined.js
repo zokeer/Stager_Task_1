@@ -314,15 +314,17 @@ var assemblies = [
   {
     "name" : "Task 1",
     "classes" : [
-    {  "name" : "DomainModel.Models.Subnet", "reportPath" : "Task_1_Subnet.htm", "coveredLines" : 27, "uncoveredLines" : 0, "coverableLines" : 27, "totalLines" : 65, "coverageType" : "LineCoverage", "methodCoverage" : "-", "coveredBranches" : 6, "totalBranches" : 6, "lineCoverageHistory" : [], "branchCoverageHistory" : [] },
-    {  "name" : "DomainModel.Repository.FileRepository", "reportPath" : "Task_1_FileRepository.htm", "coveredLines" : 31, "uncoveredLines" : 0, "coverableLines" : 31, "totalLines" : 92, "coverageType" : "LineCoverage", "methodCoverage" : "-", "coveredBranches" : 0, "totalBranches" : 0, "lineCoverageHistory" : [], "branchCoverageHistory" : [] },
-    {  "name" : "DomainModel.Service.SubnetContainerManager", "reportPath" : "Task_1_SubnetContainerManager.htm", "coveredLines" : 19, "uncoveredLines" : 4, "coverableLines" : 23, "totalLines" : 74, "coverageType" : "LineCoverage", "methodCoverage" : "-", "coveredBranches" : 4, "totalBranches" : 4, "lineCoverageHistory" : [], "branchCoverageHistory" : [] },
-    {  "name" : "DomainModel.Service.SubnetCoverageManager", "reportPath" : "Task_1_SubnetCoverageManager.htm", "coveredLines" : 18, "uncoveredLines" : 0, "coverableLines" : 18, "totalLines" : 55, "coverageType" : "LineCoverage", "methodCoverage" : "-", "coveredBranches" : 2, "totalBranches" : 2, "lineCoverageHistory" : [], "branchCoverageHistory" : [] },
-    {  "name" : "DomainModel.Service.SubnetValidator", "reportPath" : "Task_1_SubnetValidator.htm", "coveredLines" : 29, "uncoveredLines" : 0, "coverableLines" : 29, "totalLines" : 77, "coverageType" : "LineCoverage", "methodCoverage" : "-", "coveredBranches" : 2, "totalBranches" : 2, "lineCoverageHistory" : [], "branchCoverageHistory" : [] },
+    {  "name" : "DomainModel.Models.Subnet", "reportPath" : "Task_1_Subnet.htm", "coveredLines" : 38, "uncoveredLines" : 1, "coverableLines" : 39, "totalLines" : 81, "coverageType" : "LineCoverage", "methodCoverage" : "-", "coveredBranches" : 7, "totalBranches" : 8, "lineCoverageHistory" : [], "branchCoverageHistory" : [] },
+    {  "name" : "DomainModel.Models.ValidationLog", "reportPath" : "Task_1_ValidationLog.htm", "coveredLines" : 29, "uncoveredLines" : 0, "coverableLines" : 29, "totalLines" : 61, "coverageType" : "LineCoverage", "methodCoverage" : "-", "coveredBranches" : 8, "totalBranches" : 10, "lineCoverageHistory" : [], "branchCoverageHistory" : [] },
+    {  "name" : "DomainModel.Repository.FileRepository", "reportPath" : "Task_1_FileRepository.htm", "coveredLines" : 32, "uncoveredLines" : 4, "coverableLines" : 36, "totalLines" : 105, "coverageType" : "LineCoverage", "methodCoverage" : "-", "coveredBranches" : 0, "totalBranches" : 0, "lineCoverageHistory" : [], "branchCoverageHistory" : [] },
+    {  "name" : "DomainModel.Service.SubnetContainerManager", "reportPath" : "Task_1_SubnetContainerManager.htm", "coveredLines" : 42, "uncoveredLines" : 4, "coverableLines" : 46, "totalLines" : 103, "coverageType" : "LineCoverage", "methodCoverage" : "-", "coveredBranches" : 14, "totalBranches" : 18, "lineCoverageHistory" : [], "branchCoverageHistory" : [] },
+    {  "name" : "DomainModel.Service.SubnetCoverageManager", "reportPath" : "Task_1_SubnetCoverageManager.htm", "coveredLines" : 17, "uncoveredLines" : 0, "coverableLines" : 17, "totalLines" : 55, "coverageType" : "LineCoverage", "methodCoverage" : "-", "coveredBranches" : 0, "totalBranches" : 0, "lineCoverageHistory" : [], "branchCoverageHistory" : [] },
+    {  "name" : "DomainModel.Service.SubnetValidator", "reportPath" : "Task_1_SubnetValidator.htm", "coveredLines" : 30, "uncoveredLines" : 1, "coverableLines" : 31, "totalLines" : 79, "coverageType" : "LineCoverage", "methodCoverage" : "-", "coveredBranches" : 11, "totalBranches" : 12, "lineCoverageHistory" : [], "branchCoverageHistory" : [] },
   ]},
   {
     "name" : "Task 1.Tests",
     "classes" : [
+    {  "name" : "DomainModel.Models.Tests.ValidationLogTests", "reportPath" : "Task_1.Tests_ValidationLogTests.htm", "coveredLines" : 33, "uncoveredLines" : 0, "coverableLines" : 33, "totalLines" : 74, "coverageType" : "LineCoverage", "methodCoverage" : "-", "coveredBranches" : 0, "totalBranches" : 0, "lineCoverageHistory" : [], "branchCoverageHistory" : [] },
   ]},
 ];
 

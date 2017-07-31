@@ -6,7 +6,6 @@ using System.Linq;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using DomainModel.Models;
-using Task_1.DomainModel.Repository;
 
 namespace Task_1.Controllers
 {
@@ -33,7 +32,7 @@ namespace Task_1.Controllers
         {
             var repository = new FileRepository(HostingEnvironment.ApplicationPhysicalPath + "test.txt");
             //var repository = new DBRepository("PUT CONNECTION STRING HERE");
-            _normalizeSubnetName = (id, mask) => $"{id}/{mask}";
+            _normalizeSubnetName = (address, mask) => $"{address}/{mask}";
             _subnetContainerManager = new SubnetContainerManager(repository);
         }        
 
@@ -63,10 +62,10 @@ namespace Task_1.Controllers
                 DT_RowId = subnet.Id
 
             });
-            var subnets_amount = masked_subnets.ToArray().Length;
-            return Json(new { data = masked_subnets,
-                recordsTotal = subnets_amount,
-                recordsFiltered = subnets_amount
+            var masked_subnets_array = masked_subnets.ToArray();
+            return Json(new { data = masked_subnets_array,
+                recordsTotal = masked_subnets_array.Length,
+                recordsFiltered = masked_subnets_array.Length
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -80,7 +79,7 @@ namespace Task_1.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateSubnet(string id, string address, string mask)
         {
-            var log =_subnetContainerManager.Create(id, address + '/' + mask);
+            var log =_subnetContainerManager.Create(id, _normalizeSubnetName(address, mask));
             return CreateJsonResult(log);
         }
 
@@ -107,7 +106,7 @@ namespace Task_1.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditSubnet(string old_id, string new_id, string address, string mask)
         {
-            var log =_subnetContainerManager.Edit(old_id, new_id, address + '/' + mask);
+            var log =_subnetContainerManager.Edit(old_id, new_id, _normalizeSubnetName(address, mask));
             return CreateJsonResult(log);
         }
 

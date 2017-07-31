@@ -91,7 +91,7 @@ namespace Task_1.DomainModel.Service.Tests
             var result = SubnetCoverageManager.GetMinimalCoverage(new List<Subnet> { large_1, large_2 });
             var expected = new Dictionary<Subnet, List<Subnet>>
             {
-                {large_1, new List<Subnet> { large_1, large_2 } }
+                {large_2, new List<Subnet> { large_1, large_2 } }
             };
 
             foreach (var key in expected.Keys)

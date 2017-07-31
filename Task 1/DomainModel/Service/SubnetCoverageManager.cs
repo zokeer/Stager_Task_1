@@ -1,4 +1,5 @@
-﻿using DomainModel.Models;
+﻿using System;
+using DomainModel.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,8 +22,7 @@ namespace DomainModel.Service
         public static Dictionary<Subnet, List<Subnet>> GetMinimalCoverage(List<Subnet> subnet_container)
         { 
             // Топологическая сортировка, теперь "наверху" списка будут большие подсети.
-            subnet_container.Sort();
-            subnet_container.Reverse();
+            subnet_container.Sort((s1, s2) => s2.CompareTo(s1));
 
             var coverage_dict = new Dictionary<Subnet, List<Subnet>>();
             var covered_subnets = new List<Subnet>();

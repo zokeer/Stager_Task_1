@@ -1,4 +1,5 @@
-﻿using DomainModel.Service;
+﻿using DomainModel.Models;
+using DomainModel.Service;
 using NUnit.Framework;
 
 namespace Task_1.DomainModel.Service.Tests
@@ -10,80 +11,120 @@ namespace Task_1.DomainModel.Service.Tests
         [Test]
         public void IsValidAddress_RightAddress_Success()
         {
-            Assert.IsTrue(SubnetValidator.IsValidAddress("192.168.168.0"));
+            var result = SubnetValidator.IsValidAddress("192.168.168.0");
+
+            Assert.AreEqual(result.LogInfo, LogInfo.NoErrors);
+            Assert.AreEqual(result.Field, SubnetField.Address);
         }
 
         [Test]
         public void IsValidAddress_ZeroAddress_Success()
         {
-            Assert.IsTrue(SubnetValidator.IsValidAddress("0.0.0.0"));
+            var result = SubnetValidator.IsValidAddress("0.0.0.0");
+
+            Assert.AreEqual(result.LogInfo, LogInfo.NoErrors);
+            Assert.AreEqual(result.Field, SubnetField.Address);
         }
 
         [Test]
         public void IsValidAddress_RightMaskedAddress_Success()
         {
-            Assert.IsTrue(SubnetValidator.IsValidAddress("0.0.0.0/24"));
+            var result = SubnetValidator.IsValidAddress("0.0.0.0/24");
+
+            Assert.AreEqual(result.LogInfo, LogInfo.NoErrors);
+            Assert.AreEqual(result.Field, SubnetField.Address);
+
         }
 
         [Test]
         public void IsValidAddress_NotAnAddress_Fail()
         {
-            Assert.IsFalse(SubnetValidator.IsValidAddress("192.168."));
+            var result = SubnetValidator.IsValidAddress("192.168.");
+            
+            Assert.AreEqual(result.LogInfo, LogInfo.Invalid);
+            Assert.AreEqual(result.Field, SubnetField.Address);
         }
 
         [Test]
         public void IsValidAddress_WrongMaskedAddress_Fail()
         {
-            Assert.IsFalse(SubnetValidator.IsValidAddress("192.168./24"));
+            var result = SubnetValidator.IsValidAddress("192.168./24");
+
+            Assert.AreEqual(result.LogInfo, LogInfo.Invalid);
+            Assert.AreEqual(result.Field, SubnetField.Address);
         }
 
         [Test]
         public void IsValidAddress_NegativeAddress_Fail()
         {
-            Assert.IsFalse(SubnetValidator.IsValidAddress("-192.-168./24"));
+            var result = SubnetValidator.IsValidAddress("-192.-168./24");
+
+            Assert.AreEqual(result.LogInfo, LogInfo.Invalid);
+            Assert.AreEqual(result.Field, SubnetField.Address);
         }
         #endregion
         #region IsValidMaskTests
         [Test]
         public void IsValidMask_RightMask_Success()
         {
-            Assert.IsTrue(SubnetValidator.IsValidMask("192.168.168.0/24"));
+            var result = SubnetValidator.IsValidMask("192.168.168.0/24");
+
+            Assert.AreEqual(result.LogInfo, LogInfo.NoErrors);
+            Assert.AreEqual(result.Field, SubnetField.Mask);
         }
 
         [Test]
         public void IsValidMask_ZeroMask_Success()
         {
-            Assert.IsTrue(SubnetValidator.IsValidMask("192.168.168.0/0"));
+            var result = SubnetValidator.IsValidMask("192.168.168.0/0");
+            
+            Assert.AreEqual(result.LogInfo, LogInfo.NoErrors);
+            Assert.AreEqual(result.Field, SubnetField.Mask);
         }
         
         [Test]
-        public void IsValidMask_NegativeMask_Success()
+        public void IsValidMask_NegativeMask_Fail()
         {
-            Assert.IsTrue(SubnetValidator.IsValidMask("192.168.168.0/-2"));
-        }
+            var result = SubnetValidator.IsValidMask("192.168.168.0/-2");
 
+            Assert.AreEqual(result.LogInfo, LogInfo.Invalid);
+            Assert.AreEqual(result.Field, SubnetField.Mask);
+        }
+        
         [Test]
         public void IsValidMask_AddressNotAStartForMask_Success()
         {
-            Assert.IsTrue(SubnetValidator.IsValidMask("192.168.168.12/24"));
+            var result = SubnetValidator.IsValidMask("192.168.168.12/24");
+
+            Assert.AreEqual(result.LogInfo, LogInfo.NoErrors);
+            Assert.AreEqual(result.Field, SubnetField.Mask);
         }
 
         [Test]
         public void IsValidMask_LargeMask_Fail()
         {
-            Assert.IsFalse(SubnetValidator.IsValidMask("192.168.168.0/33"));
+            var result = SubnetValidator.IsValidMask("192.168.168.0/33");
+
+            Assert.AreEqual(result.LogInfo, LogInfo.Invalid);
+            Assert.AreEqual(result.Field, SubnetField.Mask);
         }
 
         [Test]
         public void IsValidMask_MoreThanTwoDigitMask_Fail()
         {
-            Assert.IsFalse(SubnetValidator.IsValidMask("192.168.168.0/016"));
+            var result = SubnetValidator.IsValidMask("192.168.168.0/016");
+
+            Assert.AreEqual(result.LogInfo, LogInfo.Invalid);
+            Assert.AreEqual(result.Field, SubnetField.Mask);
         }
 
         [Test]
         public void IsValidMask_EmptyMask_Fail()
         {
-            Assert.IsFalse(SubnetValidator.IsValidMask("192.168.168.0/"));
+            var result = SubnetValidator.IsValidMask("192.168.168.0/");
+
+            Assert.AreEqual(result.LogInfo, LogInfo.Invalid);
+            Assert.AreEqual(result.Field, SubnetField.Mask);
         }
         #endregion
     }

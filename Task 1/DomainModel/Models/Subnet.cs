@@ -1,5 +1,6 @@
 ﻿using System;
 using LukeSkywalker.IPNetwork;
+using static DomainModel.Service.SubnetValidator;
 
 namespace DomainModel.Models
 {
@@ -11,12 +12,26 @@ namespace DomainModel.Models
         public string Id { get; }
         public IPNetwork Network { get; }
 
+        private readonly string _errorMessage = @"{0} и {1} не корректные данные для создания Subnet.
+                                                   Идентификатор должен быть длины не более 255 символов,
+                                                   а подсеть соотвествовать требованиям IPv4 сети.";
+
+        /// <summary>
+        /// Конструктор создания Subnet. Перед созданием экзепляра проверяет ID на соотвествование
+        /// требованиям о длине (не более 255 символов) и на соотвествие подсети требованиям IPv4 сети.
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <param name="raw_subnet">Подсеть с маской</param>
         public Subnet(string id, string raw_subnet)
         {
+            raw_subnet = raw_subnet.Trim();
+            id = id.Trim();
+            if (!IsValidArguments(id, raw_subnet))
+                throw new ArgumentException(string.Format(_errorMessage, id, raw_subnet));
             Id = id;
             Network = IPNetwork.Parse(raw_subnet);
         }
-
+        
         public override int GetHashCode()
         {
             return Id.GetHashCode();
@@ -29,9 +44,9 @@ namespace DomainModel.Models
         /// <returns>True/False: Равны ли подсети.</returns>
         public override bool Equals(object other)
         {
-            if (!(other is Subnet))
+            var other_subnet = other as Subnet;
+            if (other_subnet == null)
                 return false;
-            Subnet other_subnet = (Subnet)other;
             return Id == other_subnet.Id && Network == other_subnet.Network;
         }
 
@@ -54,12 +69,19 @@ namespace DomainModel.Models
         /// <returns>Возвращаемое значение согласовано с требованиями IComparable</returns>
         public int CompareTo(object obj)
         {
-            Subnet another = (Subnet)obj;
+            var another = (Subnet)obj;
             if (IsCovering(another))
                 return 1;
             if (another.IsCovering(this))
                 return -1;
             return 0;
+        }
+        
+        private static bool IsValidArguments(string id, string raw_subnet)
+        {
+            return IsValidMask(raw_subnet).LogInfo == LogInfo.NoErrors &&
+                   IsValidAddress(raw_subnet).LogInfo == LogInfo.NoErrors &&
+                   IsValidId(id).LogInfo == LogInfo.NoErrors;
         }
     }
 }

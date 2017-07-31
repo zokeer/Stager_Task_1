@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
+﻿using System.Text;
 
 namespace DomainModel.Models
 {
@@ -33,30 +29,30 @@ namespace DomainModel.Models
             switch (Field)
             {
                 case SubnetField.Id:
-                    result.Append("ID");
+                    result.Append("Идентификатор");
                     break;
                 case SubnetField.Address:
-                    result.Append("Address");
+                    result.Append("Адрес");
                     break;
                 case SubnetField.Mask:
-                    result.Append("Mask");
+                    result.Append("Маска");
                     break;
                 case SubnetField.Everything:
-                    result.Append("Everything");
+                    result.Append("Всё");
                     break;
             }
             switch (LogInfo) {
                 case LogInfo.NotUnique:
-                    result.Append(" must be unique.");
+                    result.Append(" не уникален.");
                     break;
                 case LogInfo.NotExists:
-                    result.Append(" does not exist.");
+                    result.Append(" не существует.");
                     break;
                 case LogInfo.Invalid:
-                    result.Append(" is invalid.");
+                    result.Append(" содержит ошибку.");
                     break;
                 case LogInfo.NoErrors:
-                    result.Append(" is fine.");
+                    result.Append(" в порядке.");
                     break;
             }
             return result.ToString();

@@ -35,8 +35,7 @@
         function() {
             var data = table.row($(this).parents('tr')).data();
             $.post("/SubnetContainer/DeleteSubnet", { id: data.Id }, function (data) {
-                if (!data.includes("fine"))
-                    alert(data);
+                $('#log_label').text(data);
                 table.ajax.reload();
                 });
         });
@@ -59,8 +58,7 @@
                         address: $('#edit_address').val(),
                         mask: $('#edit_mask').val()
                     }, function (data) {
-                        if (!data.includes("fine"))
-                            alert(data);
+                        $('#log_label').text(data);
                         $('#editModal').css("display", "none");
                         table.ajax.reload();
                 });
@@ -75,8 +73,7 @@
                 mask: $('#new_mask').val()
             }, function (data) {
                 console.info(typeof data);
-                if (!data.includes("fine"))
-                    alert(data);
+                $('#log_label').text(data);
                 table.ajax.reload();
          });
     });

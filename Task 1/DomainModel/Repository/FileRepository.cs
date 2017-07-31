@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -39,11 +40,18 @@ namespace DomainModel.Repository
         {
             _subnets.Add(new Subnet(id, raw_subnet));
 
-            File.WriteAllText(_repositoryPath,
-                JsonConvert.SerializeObject(
-                    _subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}")
-                    )
+            try
+            {
+                File.WriteAllText(_repositoryPath,
+                    JsonConvert.SerializeObject(
+                        _subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}"))
                 );
+            }
+            catch (Newtonsoft.Json.JsonSerializationException)
+            {
+                throw new JsonSerializationException(@"Данные, которые вы пытаетесь записать неверны.
+                                                       Требуется соотвествие списку экземпляров класса Subnet.");
+            }
 
         }
 
@@ -53,15 +61,22 @@ namespace DomainModel.Repository
         /// <param name="id">ID сети, которую нужно удалить.</param>
         public void Delete(string id)
         {
-            var subnets = GetDataFromPhysicalSource();
+            _subnets = GetDataFromPhysicalSource();
 
-            subnets.Remove(subnets.Find(subnet => subnet.Id == id));
-            File.WriteAllText(_repositoryPath,
-                JsonConvert.SerializeObject(
-                    subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}"))
-                    );
+            _subnets.Remove(_subnets.Find(subnet => subnet.Id == id));
 
-            _subnets = _subnets.Where(subnet => subnet.Id != id).ToList();
+            try
+            {
+                File.WriteAllText(_repositoryPath,
+                    JsonConvert.SerializeObject(
+                        _subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}"))
+                );
+            }
+            catch (Newtonsoft.Json.JsonSerializationException)
+            {
+                throw new JsonSerializationException(@"Данные, которые вы пытаетесь записать неверны.
+                                                       Требуется соотвествие списку экземпляров класса Subnet.");
+            }
         }
 
         /// <summary>
@@ -81,12 +96,20 @@ namespace DomainModel.Repository
         /// Используется для вынуждения синхронизации виртуального контейнера с действительным файлом.
         /// </summary>
         /// <returns>Контейнер экземпляров класса Subnet.</returns>
-        public List<Subnet> GetDataFromPhysicalSource()
+        private List<Subnet> GetDataFromPhysicalSource()
         {
             var data = File.ReadAllText(_repositoryPath);
 
-            _subnets = JsonConvert.DeserializeObject<IEnumerable<string>>(data)
-                .Select(raw_data => new Subnet(raw_data.Split(',')[0], raw_data.Split(',')[1])).ToList();
+            try
+            {
+                _subnets = JsonConvert.DeserializeObject<IEnumerable<string>>(data)
+                    .Select(raw_data => new Subnet(raw_data.Split(',')[0], raw_data.Split(',')[1])).ToList();
+            }
+            catch (Newtonsoft.Json.JsonReaderException)
+            {
+                throw new JsonReaderException("Файл-репозиторий поставляет неверные данные. Они должны быть в формате JSON.");
+            }
+
 
             return _subnets;
         }
@@ -98,6 +121,7 @@ namespace DomainModel.Repository
         /// <returns>Контейнер экземпляров класса Subnet</returns>
         public List<Subnet> Get()
         {
+            _subnets = GetDataFromPhysicalSource();
             return _subnets;
         }
     }
