@@ -108,29 +108,6 @@ namespace DomainModel.Repository
         }
 
         /// <summary>
-        /// Получает все записи из файла. Преобразует их в экземпляры класса Subnet, складывает в контейнер.
-        /// Используется для вынуждения синхронизации виртуального контейнера с действительным файлом.
-        /// </summary>
-        /// <returns>Контейнер экземпляров класса Subnet.</returns>
-        private List<Subnet> GetDataFromPhysicalSource()
-        {
-            var data = File.ReadAllText(_repositoryPath);
-
-            try
-            {
-                _subnets = JsonConvert.DeserializeObject<IEnumerable<string>>(data)
-                    .Select(raw_data => new Subnet(raw_data.Split(',')[0], raw_data.Split(',')[1])).ToList();
-            }
-            catch (Newtonsoft.Json.JsonReaderException)
-            {
-                throw new JsonReaderException("Файл-репозиторий поставляет неверные данные. Они должны быть в формате JSON.");
-            }
-
-
-            return _subnets;
-        }
-
-        /// <summary>
         /// Более быстрый метод, нежели GetDataFromPhysicalSource. 
         /// Работает только с внутренним полем Subnets.
         /// </summary>
@@ -139,6 +116,30 @@ namespace DomainModel.Repository
         {
             _subnets = GetDataFromPhysicalSource();
             return _subnets;
+        }
+
+        /// <summary>
+        /// Получает все записи из файла. Преобразует их в экземпляры класса Subnet, складывает в контейнер.
+        /// Используется для вынуждения синхронизации виртуального контейнера с действительным файлом.
+        /// </summary>
+        /// <returns>Контейнер экземпляров класса Subnet.</returns>
+        private List<Subnet> GetDataFromPhysicalSource()
+        {
+            var data = File.ReadAllText(_repositoryPath);
+            List<Subnet> subnets;
+
+            try
+            {
+                subnets = JsonConvert.DeserializeObject<IEnumerable<string>>(data)
+                    .Select(raw_data => new Subnet(raw_data.Split(',')[0], raw_data.Split(',')[1])).ToList();
+            }
+            catch (Newtonsoft.Json.JsonReaderException)
+            {
+                throw new JsonReaderException(
+                    "Файл-репозиторий поставляет неверные данные. Они должны быть в формате JSON.");
+            }
+
+            return subnets;
         }
     }
 }
