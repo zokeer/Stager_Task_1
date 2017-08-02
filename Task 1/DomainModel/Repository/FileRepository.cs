@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using DomainModel.Models;
+using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json;
 
 namespace DomainModel.Repository
 {
@@ -27,7 +28,7 @@ namespace DomainModel.Repository
         /// <param name="repository_path">Путь до файла с данными.</param>
         public FileRepository(string repository_path)
         {
-            if (repository_path == null)
+            if (repository_path.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(repository_path), "Не может быть null.");
 
             _repositoryPath = repository_path;
@@ -41,9 +42,9 @@ namespace DomainModel.Repository
         /// <param name="raw_subnet">Подсеть в строковом формате.</param>
         public void Create(string id, string raw_subnet)
         {
-            if (id == null)
+            if (id.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(id), "Не может быть null.");
-            if (raw_subnet == null)
+            if (raw_subnet.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(raw_subnet), "Не может быть null.");
             _subnets.Add(new Subnet(id, raw_subnet));
 
@@ -54,7 +55,7 @@ namespace DomainModel.Repository
                         _subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}"))
                 );
             }
-            catch (Newtonsoft.Json.JsonSerializationException)
+            catch (JsonSerializationException)
             {
                 throw new JsonSerializationException(@"Данные, которые вы пытаетесь записать неверны.
                                                        Требуется соотвествие списку экземпляров класса Subnet.");
@@ -68,7 +69,7 @@ namespace DomainModel.Repository
         /// <param name="id">ID сети, которую нужно удалить.</param>
         public void Delete(string id)
         {
-            if (id == null)
+            if (id.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(id), "Не может быть null.");
             _subnets = GetDataFromPhysicalSource();
 
@@ -81,7 +82,7 @@ namespace DomainModel.Repository
                         _subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}"))
                 );
             }
-            catch (Newtonsoft.Json.JsonSerializationException)
+            catch (JsonSerializationException)
             {
                 throw new JsonSerializationException(@"Данные, которые вы пытаетесь записать неверны.
                                                        Требуется соотвествие списку экземпляров класса Subnet.");
@@ -96,11 +97,11 @@ namespace DomainModel.Repository
         /// <param name="raw_subnet">Строковое представление подсети.</param>
         public void Edit(string old_id, string new_id, string raw_subnet)
         {
-            if (old_id == null)
+            if (old_id.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(old_id), "Не может быть null.");
-            if (new_id == null)
+            if (new_id.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(new_id), "Не может быть null.");
-            if (raw_subnet == null)
+            if (raw_subnet.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(raw_subnet), "Не может быть null.");
 
             Delete(old_id);
@@ -133,7 +134,7 @@ namespace DomainModel.Repository
                 subnets = JsonConvert.DeserializeObject<IEnumerable<string>>(data)
                     .Select(raw_data => new Subnet(raw_data.Split(',')[0], raw_data.Split(',')[1])).ToList();
             }
-            catch (Newtonsoft.Json.JsonReaderException)
+            catch (JsonReaderException)
             {
                 throw new JsonReaderException(
                     "Файл-репозиторий поставляет неверные данные. Они должны быть в формате JSON.");

@@ -1,7 +1,7 @@
 ﻿using System;
-using DomainModel.Models;
 using System.Collections.Generic;
 using System.Linq;
+using DomainModel.Models;
 
 namespace DomainModel.Service
 {
@@ -29,6 +29,7 @@ namespace DomainModel.Service
 
             var coverage_dict = new Dictionary<Subnet, List<Subnet>>();
             var covered_subnets = new List<Subnet>();
+
             //Идём "сверху-вниз" забираем все подсети, которые покрывает данная. Сеть считается покрытой один раз.
             foreach (var subnet in subnet_container)
             {

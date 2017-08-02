@@ -1,9 +1,10 @@
-﻿using NUnit.Framework;
-using DomainModel.Repository;
-using DomainModel.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DomainModel.Models;
+using DomainModel.Repository;
+using Newtonsoft.Json;
+using NUnit.Framework;
 
 namespace Task_1.DomainModel.Repository.Tests
 {
@@ -24,14 +25,14 @@ namespace Task_1.DomainModel.Repository.Tests
         [Test]
         public void FileRepository_NotExistingFile_Exception()
         {
-            Assert.Throws(typeof(System.IO.FileNotFoundException),
+            Assert.Throws(typeof(FileNotFoundException),
                 () => new FileRepository(_notExistingFile));
         }
 
         [Test]
         public void FileRepository_WrongDataFile_Exception()
         {
-            Assert.Throws(typeof(Newtonsoft.Json.JsonSerializationException),
+            Assert.Throws(typeof(JsonSerializationException),
                 () => new FileRepository(_wrongDataFile));
         }
         #endregion
@@ -39,7 +40,7 @@ namespace Task_1.DomainModel.Repository.Tests
         [Test]
         public void GetData_RigthData_Success()
         {
-            var expected_list = new List<Subnet>()
+            var expected_list = new List<Subnet>
             {
                 new Subnet("1", "192.168.0.0/23"),
                 new Subnet("2", "192.168.0.0/24")

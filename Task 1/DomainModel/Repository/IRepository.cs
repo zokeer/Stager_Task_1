@@ -1,5 +1,5 @@
-﻿using DomainModel.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DomainModel.Models;
 
 namespace DomainModel.Repository
 {

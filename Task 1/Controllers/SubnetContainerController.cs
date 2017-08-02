@@ -1,11 +1,10 @@
-﻿using DomainModel.Repository;
-using DomainModel.Service;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using DomainModel.Models;
+using DomainModel.Repository;
+using DomainModel.Service;
 
 namespace Task_1.Controllers
 {

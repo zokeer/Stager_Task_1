@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
 using DomainModel.Models;
 using DomainModel.Service;
+using NUnit.Framework;
 
 namespace Task_1.DomainModel.Service.Tests
 {

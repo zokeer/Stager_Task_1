@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Moq;
-using NUnit.Framework;
+using DomainModel.Models;
 using DomainModel.Repository;
 using DomainModel.Service;
-using DomainModel.Models;
+using Moq;
+using NUnit.Framework;
 
 namespace Task_1.DomainModel.Service.Tests
 {

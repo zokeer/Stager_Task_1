@@ -1,5 +1,4 @@
-﻿using DomainModel.Models;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace DomainModel.Models.Tests
 {
