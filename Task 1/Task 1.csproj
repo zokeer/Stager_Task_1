@@ -235,7 +235,6 @@
     <Compile Include="DomainModel\Models\LogInfo.cs" />
     <Compile Include="DomainModel\Models\ValidationLog.cs" />
     <Compile Include="DomainModel\Models\SubnetField.cs" />
-    <Compile Include="DomainModel\Repository\DBRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
