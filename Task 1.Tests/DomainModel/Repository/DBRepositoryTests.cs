@@ -1,41 +1,43 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DomainModel.Repository;
+﻿using DomainModel.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace DomainModel.Repository.Tests
 {
-    [TestClass()]
+    [TestFixture]
     public class DBRepositoryTests
     {
-        [TestMethod()]
+        private string _right_connection_string;
+
+        [Test]
         public void DBRepository()
         {
-            Assert.Fail();
+            Assert.DoesNotThrow(() => new DBRepository(_right_connection_string));
         }
 
-        [TestMethod()]
+        [Test]
         public void Create()
         {
             Assert.Fail();
         }
 
-        [TestMethod()]
+        [Test]
         public void Delete()
         {
             Assert.Fail();
         }
 
-        [TestMethod()]
+        [Test]
         public void Edit()
         {
             Assert.Fail();
         }
 
-        [TestMethod()]
+        [Test]
         public void Get()
         {
             Assert.Fail();
