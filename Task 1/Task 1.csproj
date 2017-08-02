@@ -239,7 +239,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="DomainModel\Repository\FileRepository.cs" />
     <Compile Include="DomainModel\Repository\IRepository.cs" />
     <Compile Include="DomainModel\Models\Subnet.cs" />
     <Compile Include="DomainModel\Service\SubnetContainerManager.cs" />
