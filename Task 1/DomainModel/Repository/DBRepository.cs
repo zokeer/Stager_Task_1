@@ -8,11 +8,14 @@ namespace Task_1.DomainModel.Repository
 {
     public class DBRepository : IRepository
     {
-        private List<Subnet> _subnets;
+        private readonly List<Subnet> _subnets;
         private readonly string _connectionString;
 
         public DBRepository(string connection_string)
         {
+            if (connection_string == null)
+                throw new ArgumentNullException(nameof(connection_string), "Не может быть null.");
+
             _connectionString = connection_string;
             _subnets = GetDataFromPhysicalSource();
         }
@@ -40,18 +43,31 @@ namespace Task_1.DomainModel.Repository
 
         public void Create(string id, string raw_subnet)
         {
+            if (id == null)
+                throw new ArgumentNullException(nameof(id), "Не может быть null.");
+            if (raw_subnet == null)
+                throw new ArgumentNullException(nameof(raw_subnet), "Не может быть null.");
+
             _subnets.Add(new Subnet(id, raw_subnet));
-
-
         }
 
         public void Delete(string id)
         {
+            if (id == null)
+                throw new ArgumentNullException(nameof(id), "Не может быть null.");
+
             throw new NotImplementedException();
         }
 
         public void Edit(string old_id, string new_id, string raw_subnet)
         {
+            if (old_id == null)
+                throw new ArgumentNullException(nameof(old_id), "Не может быть null.");
+            if (new_id == null)
+                throw new ArgumentNullException(nameof(new_id), "Не может быть null.");
+            if (raw_subnet == null)
+                throw new ArgumentNullException(nameof(raw_subnet), "Не может быть null.");
+
             throw new NotImplementedException();
         }
 

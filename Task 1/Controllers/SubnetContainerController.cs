@@ -28,10 +28,8 @@ namespace Task_1.Controllers
         /// <summary>
         /// Конструктор инициализириует функцию преобразования и сервис.
         /// </summary>
-        public SubnetContainerController()
+        public SubnetContainerController(IRepository repository)
         {
-            var repository = new FileRepository(HostingEnvironment.ApplicationPhysicalPath + "test.txt");
-            //var repository = new DBRepository("PUT CONNECTION STRING HERE");
             _normalizeSubnetName = (address, mask) => $"{address}/{mask}";
             _subnetContainerManager = new SubnetContainerManager(repository);
         }        

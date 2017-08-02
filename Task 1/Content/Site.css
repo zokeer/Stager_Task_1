@@ -63,6 +63,7 @@ label {
 
 #coverage_table_wrapper {
     display: none;
+    width: 100%;
 }
 
 button {

@@ -23,7 +23,7 @@ namespace DomainModel.Service
         public SubnetContainerManager(IRepository repository)
         {
             if (repository == null)
-                throw new ArgumentNullException(nameof(repository));
+                throw new ArgumentNullException(nameof(repository), "Не может быть null.");
             _repository = repository;
         }
 
@@ -45,6 +45,11 @@ namespace DomainModel.Service
         /// <returns> Информация об успехе операции создания.</returns>
         public ValidationLog Create(string id, string raw_subnet)
         {
+            if (id == null)
+                throw new ArgumentNullException(nameof(id), "Не может быть null.");
+            if (raw_subnet == null)
+                throw new ArgumentNullException(nameof(raw_subnet), "Не может быть null.");
+
             var id_log = SubnetValidator.IsValidId(_repository, id);
             if (id_log.LogInfo != LogInfo.NotExists)
                 return id_log;
@@ -66,6 +71,9 @@ namespace DomainModel.Service
         /// <returns> Информация об успехе операции удаления.</returns>
         public ValidationLog Delete(string id)
         {
+            if (id == null)
+                throw new ArgumentNullException(nameof(id), "Не может быть null.");
+
             var id_log = SubnetValidator.IsValidId(_repository, id);
             if (id_log.LogInfo != LogInfo.NotUnique)
                 return id_log;
@@ -82,22 +90,31 @@ namespace DomainModel.Service
         /// <returns> Информация об успехе операции изменения.</returns>
         public ValidationLog Edit(string old_id, string new_id, string raw_subnet)
         {
+            if (old_id == null)
+                throw new ArgumentNullException(nameof(old_id), "Не может быть null.");
+            if (new_id == null)
+                throw new ArgumentNullException(nameof(new_id), "Не может быть null.");
+            if (raw_subnet == null)
+                throw new ArgumentNullException(nameof(raw_subnet), "Не может быть null.");
+            //Старый идентификатор должен существовать.
             var old_id_log = SubnetValidator.IsValidId(_repository, old_id);
-            if (old_id_log.LogInfo == LogInfo.NotUnique)
-            {
-                var new_id_log = SubnetValidator.IsValidId(_repository, new_id);
-                if (new_id_log.LogInfo != LogInfo.NotExists && new_id != old_id)
-                    return new_id_log;
-                var address_log = SubnetValidator.IsValidAddress(raw_subnet);
-                if (address_log.LogInfo != LogInfo.NoErrors)
-                    return address_log;
-                var mask_log = SubnetValidator.IsValidMask(raw_subnet);
-                if (mask_log.LogInfo != LogInfo.NoErrors)
-                    return mask_log;
-                _repository.Edit(old_id, new_id, raw_subnet);
-                return new ValidationLog(SubnetField.Everything, LogInfo.NoErrors);
-            }
-            return old_id_log;
+            if (old_id_log.LogInfo != LogInfo.NotUnique)
+                return old_id_log;
+            //Новый идентификатор либо равен старому, либо уникален.
+            var new_id_log = SubnetValidator.IsValidId(_repository, new_id);
+            if (new_id_log.LogInfo != LogInfo.NotExists && new_id != old_id)
+                return new_id_log;
+            //Адрес должен быть верен.
+            var address_log = SubnetValidator.IsValidAddress(raw_subnet);
+            if (address_log.LogInfo != LogInfo.NoErrors)
+                return address_log;
+            //Маска должна быть верна.
+            var mask_log = SubnetValidator.IsValidMask(raw_subnet);
+            if (mask_log.LogInfo != LogInfo.NoErrors)
+                return mask_log;
+
+            _repository.Edit(old_id, new_id, raw_subnet);
+            return new ValidationLog(SubnetField.Everything, LogInfo.NoErrors);
         }
     }
 }

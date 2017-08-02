@@ -1,5 +1,5 @@
-﻿var sync_func = function() {
-    var table = $('#subnetTable').DataTable({
+﻿var sync_func = function () {
+    var table = $("#subnetTable").DataTable({
         "processing": true,
         "ajax": {
             "url": "/SubnetContainer/Get",
@@ -30,68 +30,82 @@
         "order": [],
     });
 
-    $('#subnetTable tbody').on('click',
-        '#deleteButton',
+    $("#subnetTable tbody").on("click",
+        "#deleteButton",
         function() {
             var data = table.row($(this).parents('tr')).data();
-            $.post("/SubnetContainer/DeleteSubnet", { id: data.Id }, function (data) {
-                $('#log_label').text(data);
-                table.ajax.reload();
-                });
+            if (confirm("Вы точно хотите удалить подсеть с идентификатором: " + data.Id + "?")) {
+                $.post("/SubnetContainer/DeleteSubnet",
+                    { id: data.Id },
+                    function(data) {
+                        $('#log_label').text(data);
+                        table.ajax.reload();
+                    });
+            }
         });
 
-    $('#subnetTable tbody').on('click',
-        '#editButton',
-        function () {
-            var data = table.row($(this).parents('tr')).data();
-            $('#editModal').css("display", "flex");
-            $('#editModal').click(function (event) {
-                if (event.target == $('#editModal')[0]) {
-                    $('#editModal').css("display", "none");
+    $("#subnetTable tbody").on("click",
+        "#editButton",
+        function() {
+            var data = table.row($(this).parents("tr")).data();
+            $("#editModal").css("display", "flex");
+            $("#editModal").click(function(event) {
+                if (event.target == $("#editModal")[0]) {
+                    $("#editModal").css("display", "none");
                 }
             });
-            $('#submit_editted_subnet').click(function() {
-                $.post("/SubnetContainer/EditSubnet",
-                    {
-                        old_id: data.Id,
-                        new_id: $('#edit_id').val(),
-                        address: $('#edit_address').val(),
-                        mask: $('#edit_mask').val()
-                    }, function (data) {
-                        $('#log_label').text(data);
-                        $('#editModal').css("display", "none");
-                        table.ajax.reload();
-                });
+            $("#submit_editted_subnet").click(function () {
+                if (confirm("Вы точно хотите изменить подсеть с идентификатором: " + data.Id +
+                    "\nНа подсеть: " + $("#edit_id").val() + ", " + $("#edit_address").val()
+                    + "/" + $("#edit_mask").val())) {
+                    $.post("/SubnetContainer/EditSubnet",
+                        {
+                            old_id: data.Id,
+                            new_id: $("#edit_id").val(),
+                            address: $("#edit_address").val(),
+                            mask: $("#edit_mask").val()
+                        },
+                        function(data) {
+                            $("#log_label").text(data);
+                            $("#editModal").css("display", "none");
+                            table.ajax.reload();
+                        });
+                }
             });
         });
 
-    $('#submit_new_subnet').click(function() {
+    $("#submit_new_subnet").click(function() {
         $.post("/SubnetContainer/CreateSubnet",
             {
-                id: $('#new_id').val(),
-                address: $('#new_address').val(),
-                mask: $('#new_mask').val()
+                id: $("#new_id").val(),
+                address: $("#new_address").val(),
+                mask: $("#new_mask").val()
             }, function (data) {
                 console.info(typeof data);
-                $('#log_label').text(data);
+                $("#log_label").text(data);
                 table.ajax.reload();
          });
     });
 
-    $('#getCoverage').click(function () {
-        $('#coverage_table_wrapper').css('display', 'block');
-        $('#coverageTable').DataTable({
-            "processing": true,
-            "ajax": {
-                "url": "/SubnetContainer/GetCoverage",
-                "type": "GET"
-            },
-            columns: [
-                { data: "KeyId" },
-                { data: "KeyMaskedAddress" },
-                { data: "Children" }
-            ]
-        });
+    var coverage_table = $("#coverageTable").DataTable({
+        "processing": true,
+        "ajax": {
+            "url": "/SubnetContainer/GetCoverage",
+            "type": "GET"
+        },
+        bAutoWidth : false,
+        "columns": [
+            { data: "KeyId" },
+            { data: "KeyMaskedAddress" },
+            { data: "Children" }
+        ]
+    });
+
+    $("#getCoverage").click(function () {
+        coverage_table.ajax.reload();
+        $("#coverage_table_wrapper").css("display", "block");
+        coverage_table.columns.adjust().draw();
+        
     });
 }
 

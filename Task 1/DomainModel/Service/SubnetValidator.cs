@@ -20,6 +20,8 @@ namespace DomainModel.Service
         /// <returns>Информация о прохождении операции.</returns>
         public static ValidationLog IsValidAddress(string raw_subnet)
         {
+            if (raw_subnet == null)
+                return new ValidationLog(SubnetField.Address, LogInfo.Invalid);
             IPAddress test_address;
             var raw_address = raw_subnet.Split('/')[0];
             if (string.IsNullOrEmpty(raw_address) || raw_address.Length > 15)
@@ -37,6 +39,8 @@ namespace DomainModel.Service
         /// <returns>Информация о прохождении операции.</returns>
         public static ValidationLog IsValidMask(string raw_subnet)
         {
+            if (raw_subnet == null)
+                return new ValidationLog(SubnetField.Mask, LogInfo.Invalid);
             var mask = raw_subnet.Split('/')[1];
             if (string.IsNullOrEmpty(mask) || mask.Length > 2)
                 return new ValidationLog(SubnetField.Mask, LogInfo.Invalid);
@@ -56,6 +60,8 @@ namespace DomainModel.Service
         /// <returns>Информация о прохождении операции.</returns>
         public static ValidationLog IsValidId(IRepository repository, string id)
         {
+            if (repository == null)
+                throw new ArgumentNullException(nameof(repository), "Не может быть null.");
             var log = IsValidId(id);
             if (log.LogInfo != LogInfo.NoErrors)
                 return log;

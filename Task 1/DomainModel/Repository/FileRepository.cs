@@ -27,6 +27,9 @@ namespace DomainModel.Repository
         /// <param name="repository_path">Путь до файла с данными.</param>
         public FileRepository(string repository_path)
         {
+            if (repository_path == null)
+                throw new ArgumentNullException(nameof(repository_path), "Не может быть null.");
+
             _repositoryPath = repository_path;
             _subnets = GetDataFromPhysicalSource();
         }
@@ -38,6 +41,10 @@ namespace DomainModel.Repository
         /// <param name="raw_subnet">Подсеть в строковом формате.</param>
         public void Create(string id, string raw_subnet)
         {
+            if (id == null)
+                throw new ArgumentNullException(nameof(id), "Не может быть null.");
+            if (raw_subnet == null)
+                throw new ArgumentNullException(nameof(raw_subnet), "Не может быть null.");
             _subnets.Add(new Subnet(id, raw_subnet));
 
             try
@@ -61,6 +68,8 @@ namespace DomainModel.Repository
         /// <param name="id">ID сети, которую нужно удалить.</param>
         public void Delete(string id)
         {
+            if (id == null)
+                throw new ArgumentNullException(nameof(id), "Не может быть null.");
             _subnets = GetDataFromPhysicalSource();
 
             _subnets.Remove(_subnets.Find(subnet => subnet.Id == id));
@@ -87,6 +96,13 @@ namespace DomainModel.Repository
         /// <param name="raw_subnet">Строковое представление подсети.</param>
         public void Edit(string old_id, string new_id, string raw_subnet)
         {
+            if (old_id == null)
+                throw new ArgumentNullException(nameof(old_id), "Не может быть null.");
+            if (new_id == null)
+                throw new ArgumentNullException(nameof(new_id), "Не может быть null.");
+            if (raw_subnet == null)
+                throw new ArgumentNullException(nameof(raw_subnet), "Не может быть null.");
+
             Delete(old_id);
             Create(new_id, raw_subnet);
         }
