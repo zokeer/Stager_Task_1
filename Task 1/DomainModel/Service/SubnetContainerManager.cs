@@ -23,7 +23,8 @@ namespace DomainModel.Service
         public SubnetContainerManager(IRepository repository)
         {
             if (repository == null)
-                throw new ArgumentNullException(nameof(repository), "Не может быть null.");
+                throw new ArgumentNullException(nameof(repository), @"Экземпляр класса, реализующего интерфейс
+                                                                     IRepository не может быть null.");
 
             _repository = repository;
         }
@@ -47,9 +48,10 @@ namespace DomainModel.Service
         public ValidationLog Create(string id, string raw_subnet)
         {
             if (id.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(id), "Не может быть null.");
+                throw new ArgumentNullException(nameof(id), "Идентификатор новой подсети не может быть null.");
             if (raw_subnet.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(raw_subnet), "Не может быть null.");
+                throw new ArgumentNullException(nameof(raw_subnet), @"Аргумент должен быть маскированным
+                                                                    адресом подсети, но был получен null.");
 
             var id_log = SubnetValidator.IsValidId(_repository, id);
             if (id_log.LogInfo != LogInfo.NotExists)
@@ -76,7 +78,8 @@ namespace DomainModel.Service
         public ValidationLog Delete(string id)
         {
             if (id.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(id), "Не может быть null.");
+                throw new ArgumentNullException(nameof(id), @"Идентификатор подсети, которую нужно удалить не может быть null.
+                                                              Выберите существующий идентификатор подсети.");
 
             var id_log = SubnetValidator.IsValidId(_repository, id);
             if (id_log.LogInfo != LogInfo.NotUnique)
@@ -96,11 +99,16 @@ namespace DomainModel.Service
         public ValidationLog Edit(string old_id, string new_id, string raw_subnet)
         {
             if (old_id.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(old_id), "Не может быть null.");
+                throw new ArgumentNullException(nameof(old_id), @"Идентификатор подсети, которую нужно изменить
+                                                                не может быть null.
+                                                                Выберите существующий идентификатор подсети.");
             if (new_id.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(new_id), "Не может быть null.");
+                throw new ArgumentNullException(nameof(new_id), @"Новый идентификатор подсети не может быть null.
+                                                                 Это либо новый уникальный идентификатор,
+                                                                 либо тот, который изменяется.");
             if (raw_subnet.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(raw_subnet), "Не может быть null.");
+                throw new ArgumentNullException(nameof(raw_subnet), @"Аргумент должен быть маскированным
+                                                                    адресом подсети, но был получен null.");
 
             //Старый идентификатор должен существовать.
             var old_id_log = SubnetValidator.IsValidId(_repository, old_id);
