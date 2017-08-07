@@ -24,26 +24,35 @@ namespace DomainModel.Repository
         private readonly string _connectionString;
 
         /// <summary>
+        /// Имя таблицы внутри базы данных. Таблица может быть как существующей, так и нет.
+        /// </summary>
+        private readonly string _tableName;
+
+        /// <summary>
         /// Конструктор сохраняет себе строку подключения.
         /// При отсутствии таблицы Subnets в базе данных создаст её.
         /// </summary>
         /// <param name="connection_string">Строка подключения к базе данных.</param>
-        public DBRepository(string connection_string)
+        /// <param name="table_name">Имя таблицы, с которой будет работать класс.</param>
+        public DBRepository(string connection_string, string table_name = "Subnets")
         {
+            if (table_name == null)
+                throw new ArgumentNullException(nameof(table_name), @"Имя таблицы должно быть строковым параметром, но был получен null.");
             if (connection_string.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(connection_string), @"Аргумент должен был представлять строку
                                                                             подключения к базе данных, но был получен null.");
 
             _connectionString = connection_string;
-            const string sqlExpression = @"if not exists (select * from sysobjects where name='Subnets' and xtype='U')
-                                        create table Subnets (
+            _tableName = table_name;
+            string sql_expression = $@"if not exists (select * from sysobjects where name='{_tableName}' and xtype='U')
+                                        create table {_tableName} (
                                             id nvarchar(255) not null,
                                             network nvarchar(32) not null
                                         )";
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                using (var command = new SqlCommand(sqlExpression, connection))
+                using (var command = new SqlCommand(sql_expression, connection))
                     command.ExecuteNonQuery();
             }
              _subnets = GetDataFromPhysicalSource();
@@ -63,7 +72,7 @@ namespace DomainModel.Repository
                 throw new ArgumentNullException(nameof(raw_subnet), @"Аргумент должен быть маскированным
                                                                     адресом подсети, но был получен null.");
 
-            var sql_expression = $"INSERT INTO Subnets (id, network) VALUES (N'{id}', N'{raw_subnet}')";
+            var sql_expression = $"INSERT INTO {_tableName} (id, network) VALUES (N'{id}', N'{raw_subnet}')";
 
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -88,7 +97,7 @@ namespace DomainModel.Repository
                 throw new ArgumentNullException(nameof(id), @"Идентификатор удаляемой подсети не может быть null.
                                                               Выберите уже существующий идентификатор.");
 
-            var sql_expression = $"DELETE FROM Subnets WHERE id = N'{id}'";
+            var sql_expression = $"DELETE FROM {_tableName} WHERE id = N'{id}'";
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Query(sql_expression);
@@ -117,7 +126,7 @@ namespace DomainModel.Repository
                 throw new ArgumentNullException(nameof(raw_subnet), @"Аргумент должен быть маскированным
                                                                     адресом подсети, но был получен null.");
 
-            var sql_expression = $"UPDATE Subnets SET id = N'{new_id}', network = N'{raw_subnet}' WHERE id = N'{old_id}'";
+            var sql_expression = $"UPDATE {_tableName} SET id = N'{new_id}', network = N'{raw_subnet}' WHERE id = N'{old_id}'";
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Query(sql_expression);
@@ -142,13 +151,13 @@ namespace DomainModel.Repository
         /// <returns>Список экземпляров класса Subnet.</returns>
         private List<Subnet> GetDataFromPhysicalSource()
         {
-            const string sqlExpression = "SELECT * FROM Subnets";
+            string sql_expression = $"SELECT * FROM {_tableName}";
             var subnets = new List<Subnet>();
 
             using (var sql_connection = new SqlConnection(_connectionString))
             {
                 sql_connection.Open();
-                var command = new SqlCommand(sqlExpression, sql_connection);
+                var command = new SqlCommand(sql_expression, sql_connection);
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {

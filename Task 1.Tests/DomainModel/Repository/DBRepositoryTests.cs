@@ -15,6 +15,7 @@ namespace DomainModel.Repository.Tests
     {
         private readonly string _rightConnectionString;
         private readonly string _wrongConnectionString;
+        private readonly string _tableName;
 
         public DBRepositoryTests()
         {
@@ -22,8 +23,9 @@ namespace DomainModel.Repository.Tests
                                     Integrated Security=True;Integrated Security=True;
                                     Pooling=False;";
             _wrongConnectionString = "wrong";
-            const string sqlExpression = @"if not exists (select * from sysobjects where name='Test' and xtype='U')
-                                        create table Test (
+            _tableName = "Test";
+            var sql_expression = $@"if not exists (select * from sysobjects where name='{_tableName}' and xtype='U')
+                                        create table {_tableName} (
                                             id nvarchar(255) not null,
                                             network nvarchar(32) not null
                                         )";
@@ -31,7 +33,7 @@ namespace DomainModel.Repository.Tests
             using (var connection = new SqlConnection(_rightConnectionString))
             {
                 connection.Open();
-                using (var command = new SqlCommand(sqlExpression, connection))
+                using (var command = new SqlCommand(sql_expression, connection))
                     command.ExecuteNonQuery();
             }
         }
@@ -48,15 +50,16 @@ namespace DomainModel.Repository.Tests
         {
             Assert.Throws<ArgumentException>(() => new DBRepository(_wrongConnectionString));
         }
-#endregion
+        #endregion
+        #region CreateTests
         [Test]
         public void Create_ValidData_Success()
         {
             RecreateTestTable();
             var id = "new_id";
             var raw_subnet = "192.10.10.0/22";
-            var repo = new DBRepository(_rightConnectionString);
-            var expected = new List<Subnet>()
+            var repo = new DBRepository(_rightConnectionString, _tableName);
+            var expected = new List<Subnet>
             {
                 new Subnet(id, raw_subnet)
             };
@@ -66,32 +69,91 @@ namespace DomainModel.Repository.Tests
         }
 
         [Test]
-        public void Delete()
+        public void Create_NullId_ThrowsException()
         {
-            Assert.Fail();
+            var repo = new DBRepository(_rightConnectionString, _tableName);
+            Assert.Throws<ArgumentNullException>(() => repo.Create(null, "doesn't matter what"));
         }
 
         [Test]
-        public void Edit()
+        public void Create_NullSubnet_ThrowsException()
         {
-            Assert.Fail();
+            var repo = new DBRepository(_rightConnectionString, _tableName);
+            Assert.Throws<ArgumentNullException>(() => repo.Create("some_id", null));
+        }
+        #endregion
+        #region DeleteTests
+        [Test]
+        public void Delete_ValidData_Success()
+        {
+            RecreateTestTable();
+            var id = "new_id";
+            var raw_subnet = "192.10.10.0/22";
+            var repo = new DBRepository(_rightConnectionString, _tableName);
+            repo.Create(id, raw_subnet);
+            repo.Delete(id);
+            TestRepositoryContent(repo, new List<Subnet>());
+
         }
 
         [Test]
-        public void Get()
+        public void Delete_NullId_ThrowsException()
         {
-            Assert.Fail();
+            var repo = new DBRepository(_rightConnectionString, _tableName);
+            Assert.Throws<ArgumentNullException>(() => repo.Delete(null));
+        }
+        #endregion
+        #region  EditTests
+        [Test]
+        public void Edit_ValidData_Success()
+        {
+            RecreateTestTable();
+            var old_id = "old_id";
+            var raw_subnet = "192.10.10.0/22";
+            var repo = new DBRepository(_rightConnectionString, _tableName);
+            repo.Create(old_id, raw_subnet);
+            var new_id = "new_id";
+            var expected = new List<Subnet>
+            {
+                new Subnet(new_id, raw_subnet)
+            };
+
+            repo.Edit(old_id, new_id, raw_subnet);
+            TestRepositoryContent(repo, expected);
+
         }
 
-        private bool TestRepositoryContent(IRepository repository, List<Subnet> expected)
+        [Test]
+        public void Edit_NullOldId_ThrowsException()
+        {
+            var repo = new DBRepository(_rightConnectionString, _tableName);
+            Assert.Throws<ArgumentNullException>(() => repo.Edit(null, "doesn't matter what", "doesn't matter what"));
+        }
+
+        [Test]
+        public void Edit_NullNewId_ThrowsException()
+        {
+            var repo = new DBRepository(_rightConnectionString, _tableName);
+            Assert.Throws<ArgumentNullException>(() => repo.Edit("doesn't matter what", null, "doesn't matter what"));
+        }
+
+        [Test]
+        public void Edit_NullSubnet_ThrowsException()
+        {
+            var repo = new DBRepository(_rightConnectionString, _tableName);
+            Assert.Throws<ArgumentNullException>(() => repo.Edit("some_id", "some_new_id", null));
+        }
+
+        #endregion
+        private void TestRepositoryContent(IRepository repository, List<Subnet> expected)
         {
             var subnets = repository.Get();
             CollectionAssert.AreEquivalent(expected, subnets);
         }
         private void RecreateTestTable()
         {
-            const string sqlExpression = @"drop table Test;
-                                        create table Test (
+            var sql_expression = $@"drop table {_tableName};
+                                        create table {_tableName} (
                                             id nvarchar(255) not null,
                                             network nvarchar(32) not null
                                         )";
@@ -99,7 +161,7 @@ namespace DomainModel.Repository.Tests
             using (var connection = new SqlConnection(_rightConnectionString))
             {
                 connection.Open();
-                using (var command = new SqlCommand(sqlExpression, connection))
+                using (var command = new SqlCommand(sql_expression, connection))
                     command.ExecuteNonQuery();
             }
         }
