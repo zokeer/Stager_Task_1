@@ -6,6 +6,7 @@ using DomainModel.Models;
 using DomainModel.Repository;
 using DomainModel.Service;
 using Microsoft.Ajax.Utilities;
+using Task_1.ASMX;
 
 namespace Task_1.Controllers
 {
@@ -17,7 +18,7 @@ namespace Task_1.Controllers
         /// <summary>
         /// Сервис для работы с контейнером экземпляров класса Subnet.
         /// </summary>
-        private readonly SubnetContainerManager _subnetContainerManager;
+        private readonly SubnetContainerWebService _subnetContainerWebService;
 
         /// <summary>
         /// Функция преобразования строковых представлений полей
@@ -28,15 +29,10 @@ namespace Task_1.Controllers
         /// <summary>
         /// Конструктор инициализириует функцию преобразования и сервис.
         /// </summary>
-        public SubnetContainerController(IRepository repository)
+        public SubnetContainerController()
         {
-            if (repository == null)
-                throw new ArgumentNullException(nameof(repository), @"Аргумент должен быть экземпляром класса,
-                                                                    реализующем интерфейс IRepository,
-                                                                    но был получен null.");
-
             _normalizeSubnetName = (address, mask) => $"{address}/{mask}";
-            _subnetContainerManager = new SubnetContainerManager(repository);
+            _subnetContainerWebService = new SubnetContainerWebService();
         }        
 
         /// <summary>
@@ -56,7 +52,8 @@ namespace Task_1.Controllers
         [HttpGet]
         public ActionResult Get()
         {
-            var subnets =_subnetContainerManager.Get();
+            var seriablizable_subnets =_subnetContainerWebService.Get();
+            var subnets = TransformAsmxToModel(seriablizable_subnets);
             IEnumerable<object> masked_subnets = subnets.Select((subnet, index) => new
             {
                 subnet.Id,
@@ -91,7 +88,7 @@ namespace Task_1.Controllers
                 throw new ArgumentNullException(nameof(mask), @"Аргумент должен быть 
                                                                     маской подсети, но был получен null.");
 
-            var log =_subnetContainerManager.Create(id, _normalizeSubnetName(address, mask));
+            var log = _subnetContainerWebService.Create(id, _normalizeSubnetName(address, mask));
             return CreateJsonResult(log);
         }
 
@@ -106,7 +103,7 @@ namespace Task_1.Controllers
             if (id.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(id), @"Идентификатор подсети, которую нужно удалить не может быть null.
                                                               Выберите существующий идентификатор подсети.");
-            var log = _subnetContainerManager.Delete(id);
+            var log = _subnetContainerWebService.Delete(id);
             return CreateJsonResult(log);
         }
 
@@ -136,41 +133,41 @@ namespace Task_1.Controllers
                 throw new ArgumentNullException(nameof(mask), @"Аргумент должен быть 
                                                                     маской подсети, но был получен null.");
 
-            var log =_subnetContainerManager.Edit(old_id, new_id, _normalizeSubnetName(address, mask));
+            var log = _subnetContainerWebService.Edit(old_id, new_id, _normalizeSubnetName(address, mask));
             return CreateJsonResult(log);
         }
 
-        /// <summary>
-        /// Получает минимальное покрытие подсетей из класса-сервиса.
-        /// </summary>
-        /// <returns>
-        /// Json-представление маскированных подсетей минимального покрытия
-        /// и дополнительные поля для DataTables.
-        /// </returns>
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult GetCoverage()
-        {
-            var coverage = SubnetCoverageManager.GetMinimalCoverage(_subnetContainerManager.Get());
-            var json_acceptable_list = new List<object>();
+        ///// <summary>
+        ///// Получает минимальное покрытие подсетей из класса-сервиса.
+        ///// </summary>
+        ///// <returns>
+        ///// Json-представление маскированных подсетей минимального покрытия
+        ///// и дополнительные поля для DataTables.
+        ///// </returns>
+        //[AcceptVerbs(HttpVerbs.Get)]
+        //public ActionResult GetCoverage()
+        //{
+        //    var coverage = SubnetCoverageManager.GetMinimalCoverage(_subnetContainerManager.Get());
+        //    var json_acceptable_list = new List<object>();
 
-            foreach (var key in coverage.Keys)
-            {
-                json_acceptable_list.Add(new
-                {
-                    KeyId = key.Id,
-                    KeyMaskedAddress = _normalizeSubnetName(key.Network.Network.ToString(),
-                        key.Network.Cidr.ToString()),
-                    Children = coverage[key].Select(subnet => subnet.Id)
-                });                
-            }
+        //    foreach (var key in coverage.Keys)
+        //    {
+        //        json_acceptable_list.Add(new
+        //        {
+        //            KeyId = key.Id,
+        //            KeyMaskedAddress = _normalizeSubnetName(key.Network.Network.ToString(),
+        //                key.Network.Cidr.ToString()),
+        //            Children = coverage[key].Select(subnet => subnet.Id)
+        //        });                
+        //    }
 
-            return Json(new
-            {
-                data = json_acceptable_list,
-                recordsTotal = json_acceptable_list.Count,
-                recordsFiltered = json_acceptable_list.Count
-            }, JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(new
+        //    {
+        //        data = json_acceptable_list,
+        //        recordsTotal = json_acceptable_list.Count,
+        //        recordsFiltered = json_acceptable_list.Count
+        //    }, JsonRequestBehavior.AllowGet);
+        //}
 
         /// <summary>
         /// Преобразует экземпляр класса ValidationLog в JSON.
@@ -184,6 +181,12 @@ namespace Task_1.Controllers
                                                                 Передайте экземпляр класса ValidationLog.");
 
             return Json(log.ToString(), JsonRequestBehavior.AllowGet);
+        }
+
+        private List<Subnet> TransformAsmxToModel(SeriablizableSubnet[] asmx_subnets)
+        {
+            return asmx_subnets.Select(subnet => new Subnet(subnet.Id,
+                _normalizeSubnetName(subnet.Address, subnet.Mask))).ToList();
         }
     }
 }

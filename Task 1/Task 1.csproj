@@ -231,6 +231,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="ASMX\SeriablizableSubnet.cs" />
+    <Compile Include="ASMX\SubnetContainerWebService.asmx.cs">
+      <DependentUpon>SubnetContainerWebService.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controllers\SubnetContainerController.cs" />
     <Compile Include="DomainModel\Models\LogInfo.cs" />
     <Compile Include="DomainModel\Models\ValidationLog.cs" />
@@ -248,6 +253,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ASMX\SubnetContainerWebService.asmx" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />

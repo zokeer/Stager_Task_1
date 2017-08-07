@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace DomainModel.Models
 {
@@ -6,6 +7,7 @@ namespace DomainModel.Models
     /// Класс хранит логирование процесса создания подсети.
     /// Его поля показывают какое поле соотвествует требованиям.
     /// </summary>
+    [Serializable]
     public class ValidationLog
     {
         /// <summary>
