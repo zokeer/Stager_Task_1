@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using DomainModel.Models;
 using DomainModel.Repository;
 using DomainModel.Service;
+using Microsoft.Ajax.Utilities;
 
 namespace Task_1.Controllers
 {
@@ -29,6 +30,11 @@ namespace Task_1.Controllers
         /// </summary>
         public SubnetContainerController(IRepository repository)
         {
+            if (repository == null)
+                throw new ArgumentNullException(nameof(repository), @"Аргумент должен быть экземпляром класса,
+                                                                    реализующем интерфейс IRepository,
+                                                                    но был получен null.");
+
             _normalizeSubnetName = (address, mask) => $"{address}/{mask}";
             _subnetContainerManager = new SubnetContainerManager(repository);
         }        
@@ -76,6 +82,15 @@ namespace Task_1.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateSubnet(string id, string address, string mask)
         {
+            if (id.IsNullOrWhiteSpace())
+                throw new ArgumentNullException(nameof(id), "Идентификатор новой подсети не может быть null.");
+            if (address.IsNullOrWhiteSpace())
+                throw new ArgumentNullException(nameof(address), @"Аргумент должен быть 
+                                                                    адресом подсети, но был получен null.");
+            if (mask.IsNullOrWhiteSpace())
+                throw new ArgumentNullException(nameof(mask), @"Аргумент должен быть 
+                                                                    маской подсети, но был получен null.");
+
             var log =_subnetContainerManager.Create(id, _normalizeSubnetName(address, mask));
             return CreateJsonResult(log);
         }
@@ -88,6 +103,9 @@ namespace Task_1.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult DeleteSubnet(string id)
         {
+            if (id.IsNullOrWhiteSpace())
+                throw new ArgumentNullException(nameof(id), @"Идентификатор подсети, которую нужно удалить не может быть null.
+                                                              Выберите существующий идентификатор подсети.");
             var log = _subnetContainerManager.Delete(id);
             return CreateJsonResult(log);
         }
@@ -103,6 +121,21 @@ namespace Task_1.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditSubnet(string old_id, string new_id, string address, string mask)
         {
+            if (old_id.IsNullOrWhiteSpace())
+                throw new ArgumentNullException(nameof(old_id), @"Идентификатор подсети, которую нужно изменить
+                                                                не может быть null.
+                                                                Выберите существующий идентификатор подсети.");
+            if (new_id.IsNullOrWhiteSpace())
+                throw new ArgumentNullException(nameof(new_id), @"Новый идентификатор подсети не может быть null.
+                                                                 Это либо новый уникальный идентификатор,
+                                                                 либо тот, который изменяется.");
+            if (address.IsNullOrWhiteSpace())
+                throw new ArgumentNullException(nameof(address), @"Аргумент должен быть 
+                                                                    адресом подсети, но был получен null.");
+            if (mask.IsNullOrWhiteSpace())
+                throw new ArgumentNullException(nameof(mask), @"Аргумент должен быть 
+                                                                    маской подсети, но был получен null.");
+
             var log =_subnetContainerManager.Edit(old_id, new_id, _normalizeSubnetName(address, mask));
             return CreateJsonResult(log);
         }
@@ -146,6 +179,10 @@ namespace Task_1.Controllers
         /// <returns>Json-представление переданной информации.</returns>
         private JsonResult CreateJsonResult(ValidationLog log)
         {
+            if (log == null)
+                throw new ArgumentNullException(nameof(log), @"Аргумент, представляющий логирование выполненных операций не может быть null.
+                                                                Передайте экземпляр класса ValidationLog.");
+
             return Json(log.ToString(), JsonRequestBehavior.AllowGet);
         }
     }

@@ -24,6 +24,11 @@ namespace DomainModel.Models
         /// <param name="raw_subnet">Подсеть с маской</param>
         public Subnet(string id, string raw_subnet)
         {
+            if (id == null)
+                throw new ArgumentNullException(nameof(id), "Идентификтаор подсети, не может быть null.");
+            if (raw_subnet == null)
+                throw new ArgumentNullException(nameof(raw_subnet), "Маскированный адрес подсети не может быть null");
+
             raw_subnet = raw_subnet.Trim();
             id = id.Trim();
             if (!IsValidArguments(id, raw_subnet))
@@ -58,6 +63,11 @@ namespace DomainModel.Models
         /// <returns>True/False: Покрывает ли эта подсеть данную.</returns>
         public bool IsCovering(Subnet candidate_subnet)
         {
+            if (candidate_subnet == null)
+                throw new ArgumentNullException(nameof(candidate_subnet), @"Аргумент должен представлять собой
+                                                                            экземпляр класса Subnet,
+                                                                            но был получен null");
+
             return IPNetwork.Contains(Network, candidate_subnet.Network);
         }
 
@@ -79,6 +89,11 @@ namespace DomainModel.Models
         
         private static bool IsValidArguments(string id, string raw_subnet)
         {
+            if (id == null)
+                throw new ArgumentNullException(nameof(id), "Проверяемый идентификтаор подсети, не может быть null.");
+            if (raw_subnet == null)
+                throw new ArgumentNullException(nameof(raw_subnet), "Проверяемый маскированный адрес подсети не может быть null");
+
             return IsValidMask(raw_subnet).LogInfo == LogInfo.NoErrors &&
                    IsValidAddress(raw_subnet).LogInfo == LogInfo.NoErrors &&
                    IsValidId(id).LogInfo == LogInfo.NoErrors;
