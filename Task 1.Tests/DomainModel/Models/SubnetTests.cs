@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace Task_1.Models.Tests
 {
+    [Parallelizable]
     [TestFixture]
     public class SubnetTests
     {

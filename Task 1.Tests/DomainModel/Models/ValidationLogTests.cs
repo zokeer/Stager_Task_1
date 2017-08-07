@@ -2,6 +2,7 @@
 
 namespace DomainModel.Models.Tests
 {
+    [Parallelizable]
     [TestFixture]
     public class ValidationLogTests
     {

@@ -1,10 +1,6 @@
-﻿using DomainModel.Repository;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DomainModel.Models;
 using NUnit.Framework;
 
@@ -46,9 +42,21 @@ namespace DomainModel.Repository.Tests
         }
 
         [Test]
-        public void DBRepository_WrongConnectionString_Fail()
+        public void DBRepository_WrongConnectionString_ThrowsException()
         {
             Assert.Throws<ArgumentException>(() => new DBRepository(_wrongConnectionString));
+        }
+
+        [Test]
+        public void DBRepository_NullTableName_ThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new DBRepository(_rightConnectionString, null));
+        }
+
+        [Test]
+        public void DBRepository_NullConnectionString_ThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new DBRepository(null, "fjdij"));
         }
         #endregion
         #region CreateTests

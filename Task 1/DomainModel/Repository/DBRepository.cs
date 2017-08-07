@@ -36,7 +36,7 @@ namespace DomainModel.Repository
         /// <param name="table_name">Имя таблицы, с которой будет работать класс.</param>
         public DBRepository(string connection_string, string table_name = "Subnets")
         {
-            if (table_name == null)
+            if (table_name.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(table_name), @"Имя таблицы должно быть строковым параметром, но был получен null.");
             if (connection_string.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(connection_string), @"Аргумент должен был представлять строку

@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace Task_1.DomainModel.Service.Tests
 {
+    [Parallelizable]
     [TestFixture]
     public class SubnetValidatorTests
     {
