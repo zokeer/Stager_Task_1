@@ -5,7 +5,6 @@ using System.Linq;
 using System.Web.Management;
 using Dapper;
 using DomainModel.Models;
-using DomainModel.Repository;
 using Microsoft.Ajax.Utilities;
 
 namespace DomainModel.Repository
