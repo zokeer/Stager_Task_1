@@ -22,7 +22,7 @@ namespace DomainModel.Service
         public static Dictionary<Subnet, List<Subnet>> GetMinimalCoverage(List<Subnet> subnet_container)
         {
             if (subnet_container == null)
-                throw new ArgumentNullException(nameof(subnet_container), "Не может быть null.");
+                throw new ArgumentNullException(nameof(subnet_container), "Список подсетей, чьё покрытие нужно построить не может быть null.");
 
             // Топологическая сортировка, теперь "наверху" списка будут большие подсети.
             subnet_container.Sort((s1, s2) => s2.CompareTo(s1));
@@ -53,7 +53,7 @@ namespace DomainModel.Service
         private static Dictionary<Subnet, List<Subnet>> RemoveEmptyCoverages(Dictionary<Subnet, List<Subnet>> coverage_dict)
         {
             if (coverage_dict == null)
-                throw new ArgumentNullException(nameof(coverage_dict), "Не может быть null.");
+                throw new ArgumentNullException(nameof(coverage_dict), "Словарь, возможно содержащий записи, где значение пусто, не может быть null.");
 
             return coverage_dict
                 .Where(s => s.Value.Count > 0)

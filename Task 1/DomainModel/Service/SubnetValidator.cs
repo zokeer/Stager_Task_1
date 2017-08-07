@@ -65,7 +65,9 @@ namespace DomainModel.Service
         public static ValidationLog IsValidId(IRepository repository, string id)
         {
             if (repository == null)
-                throw new ArgumentNullException(nameof(repository), "Не может быть null.");
+                throw new ArgumentNullException(nameof(repository), @"Репозиторий данных не может быть null. 
+                                                                     Проверка уникальности id будет производится
+                                                                     на основе данных репозитория.");
 
             var log = IsValidId(id);
             if (log.LogInfo != LogInfo.NoErrors)
