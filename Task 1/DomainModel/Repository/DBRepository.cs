@@ -32,7 +32,9 @@ namespace DomainModel.Repository
         public DBRepository(string connection_string)
         {
             if (connection_string.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(connection_string), "Не может быть null.");
+                throw new ArgumentNullException(nameof(connection_string), @"Строка подключения не может быть null.
+                                                                            Это обязательный параметр для подключения
+                                                                            к базе данных.");
 
             _connectionString = connection_string;
             const string sqlExpression = @"if not exists (select * from sysobjects where name='Subnets' and xtype='U')
@@ -58,9 +60,9 @@ namespace DomainModel.Repository
         public void Create(string id, string raw_subnet)
         {
             if (id.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(id), "Не может быть null.");
+                throw new ArgumentNullException(nameof(id), "Идентификатор нового пользователья не может быть null.");
             if (raw_subnet.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(raw_subnet), "Не может быть null.");
+                throw new ArgumentNullException(nameof(raw_subnet), "Маскированный адрес подсети не может быть null.");
 
             var sql_expression = $"INSERT INTO Subnets (id, network) VALUES (N'{id}', N'{raw_subnet}')";
 
@@ -84,7 +86,8 @@ namespace DomainModel.Repository
         public void Delete(string id)
         {
             if (id.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(id), "Не может быть null.");
+                throw new ArgumentNullException(nameof(id), @"Идентификатор удаляемой подсети не может быть null.
+                                                              Выберите уже существующий идентификатор.");
 
             var sql_expression = $"DELETE FROM Subnets WHERE id = N'{id}'";
             using (var connection = new SqlConnection(_connectionString))

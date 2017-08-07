@@ -36,7 +36,7 @@ namespace Task_1.Controllers
         /// <summary>
         /// Метод отображает базовый вид страницы.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Базовый вид страницы.</returns>
         [HttpGet]
         public ActionResult Index()
         {
