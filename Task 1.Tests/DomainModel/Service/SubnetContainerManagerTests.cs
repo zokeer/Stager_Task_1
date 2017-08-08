@@ -13,6 +13,12 @@ namespace Task_1.DomainModel.Service.Tests
     [TestFixture]
     public class SubnetContainerManagerTests
     {
+        [Test]
+        public void SubnetContainerManager_NullRepository_ThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new SubnetContainerManager(null));
+        }
+
         #region GetTests
         [Test]
         public void GetTest_SameCollections()

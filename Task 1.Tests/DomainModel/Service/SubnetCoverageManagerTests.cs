@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DomainModel.Models;
 using DomainModel.Service;
 using NUnit.Framework;
@@ -9,6 +10,12 @@ namespace Task_1.DomainModel.Service.Tests
     [TestFixture]
     public class SubnetCoverageManagerTests
     {
+        [Test]
+        public void GetMinimalCoverage_NullArgument_ThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() => SubnetCoverageManager.GetMinimalCoverage(null));
+        }
+
         [Test]
         public void GetMinimalCoverage_OneCoversAnother_Success()
         {

@@ -1,4 +1,5 @@
-﻿using DomainModel.Models;
+﻿using System;
+using DomainModel.Models;
 using LukeSkywalker.IPNetwork;
 using NUnit.Framework;
 
@@ -15,7 +16,19 @@ namespace Task_1.Models.Tests
 
             Assert.AreEqual(subnet.Id, "id");
             Assert.AreEqual(IPNetwork.Parse("0.0.0.0/24"), subnet.Network);
-        }        
+        }
+
+        [Test]
+        public void Subnet_NullId_ThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Subnet(null, "0.0.0.0/24"));
+        }
+
+        [Test]
+        public void Subnet_NullSubnet_ThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Subnet("fddd", null));
+        }
 
         [Test]
         public void GetHashCode_SomeString_GivesIdHashCode()

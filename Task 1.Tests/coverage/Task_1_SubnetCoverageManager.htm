@@ -21,14 +21,14 @@
 <tr><th>Coverable lines:</th><td>24</td></tr>
 <tr><th>Total lines:</th><td>66</td></tr>
 <tr><th>Line coverage:</th><td>83.3%</td></tr>
-<tr><th>Branch coverage:</th><td>50%</td></tr>
+<tr><th>Branch coverage:</th><td>66.6%</td></tr>
 </tbody>
 </table>
 <h1>Metrics</h1>
 <table class="overview table-fixed">
 <thead><tr><th>Method</th><th>Cyclomatic complexity <a href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" class="info">&nbsp;</a></th><th>NPath complexity <a href="https://modess.io/npath-complexity-cyclomatic-complexity-explained" class="info">&nbsp;</a></th><th>Sequence coverage <a href="https://en.wikipedia.org/wiki/Code_coverage" class="info">&nbsp;</a></th><th>Branch coverage <a href="https://en.wikipedia.org/wiki/Code_coverage" class="info">&nbsp;</a></th></tr></thead>
 <tbody>
-<tr><td title="System.Collections.Generic.Dictionary`2&lt;DomainModel.Models.Subnet,System.Collections.Generic.List`1&lt;DomainModel.Models.Subnet&gt;&gt; DomainModel.Service.SubnetCoverageManager::GetMinimalCoverage(System.Collections.Generic.List`1&lt;DomainModel.Models.Subnet&gt;)">GetMinimalCoverage(...)</td><td>4</td><td>2</td><td>94.12</td><td>66.67</td></tr>
+<tr><td title="System.Collections.Generic.Dictionary`2&lt;DomainModel.Models.Subnet,System.Collections.Generic.List`1&lt;DomainModel.Models.Subnet&gt;&gt; DomainModel.Service.SubnetCoverageManager::GetMinimalCoverage(System.Collections.Generic.List`1&lt;DomainModel.Models.Subnet&gt;)">GetMinimalCoverage(...)</td><td>4</td><td>4</td><td>94.12</td><td>80</td></tr>
 <tr><td title="System.Collections.Generic.Dictionary`2&lt;DomainModel.Models.Subnet,System.Collections.Generic.List`1&lt;DomainModel.Models.Subnet&gt;&gt; DomainModel.Service.SubnetCoverageManager::RemoveEmptyCoverages(System.Collections.Generic.Dictionary`2&lt;DomainModel.Models.Subnet,System.Collections.Generic.List`1&lt;DomainModel.Models.Subnet&gt;&gt;)">RemoveEmptyCoverages(...)</td><td>5</td><td>2</td><td>80</td><td>66.67</td></tr>
 </tbody>
 </table>
@@ -71,7 +71,7 @@
 <tr data-coverage="{'AllTestMethods': {'VC': '5', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">5</td><td class="rightmargin right"><a id="file0_line32"></a><code>32</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;covered_subnets&nbsp;=&nbsp;new&nbsp;List&lt;Subnet&gt;();</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line33"></a><code>33</code></td><td></td><td class="lightgray"><code></code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line34"></a><code>34</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Идём&nbsp;&quot;сверху-вниз&quot;&nbsp;забираем&nbsp;все&nbsp;подсети,&nbsp;которые&nbsp;покрывает&nbsp;данная.&nbsp;Сеть&nbsp;считается&nbsp;покрытой&nbsp;один&nbsp;раз.</code></td></tr>
-<tr data-coverage="{'AllTestMethods': {'VC': '43', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">43</td><td class="rightmargin right"><a id="file0_line35"></a><code>35</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(var&nbsp;subnet&nbsp;in&nbsp;subnet_container)</code></td></tr>
+<tr title="2 of 2 branches are covered" data-coverage="{'AllTestMethods': {'VC': '43', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">43</td><td class="rightmargin right"><a id="file0_line35"></a><code>35</code></td><td class="branch100">&nbsp;</td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(var&nbsp;subnet&nbsp;in&nbsp;subnet_container)</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '14', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">14</td><td class="rightmargin right"><a id="file0_line36"></a><code>36</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '56', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">56</td><td class="rightmargin right"><a id="file0_line37"></a><code>37</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coverage_dict.Add(subnet,&nbsp;subnet_container.Where(s&nbsp;=&gt;&nbsp;subnet.IsCovering(s)</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '56', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">56</td><td class="rightmargin right"><a id="file0_line38"></a><code>38</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;&amp;&nbsp;!covered_subnets.Contains(s)).ToList());</code></td></tr>
@@ -105,7 +105,7 @@
 <tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line66"></a><code>66</code></td><td></td><td class="lightgray"><code>}</code></td></tr>
 </tbody>
 </table>
-<div class="footer">Generated by: ReportGenerator 2.5.5.0<br />07.08.2017 - 15:09:27<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="http://www.palmmedia.de">www.palmmedia.de</a></div></div>
+<div class="footer">Generated by: ReportGenerator 2.5.5.0<br />08.08.2017 - 15:16:11<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="http://www.palmmedia.de">www.palmmedia.de</a></div></div>
 <div class="containerright">
 <div class="containerrightfixed">
 <h1>Methods/Properties</h1>
