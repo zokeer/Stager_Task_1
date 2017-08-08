@@ -2,6 +2,9 @@
 
 namespace Task_1.ASMX
 {
+    /// <summary>
+    /// Класс, представляющий экземпляры класса Subnet в сериализованном виде.
+    /// </summary>
     [Serializable]
     public class SeriablizableSubnet
     {
