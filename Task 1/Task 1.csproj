@@ -231,12 +231,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="ASMX\SeriablizableSubnet.cs" />
     <Compile Include="ASMX\SubnetContainerWebService.asmx.cs">
       <DependentUpon>SubnetContainerWebService.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ASMX\SubnetSerializer.cs" />
     <Compile Include="Controllers\SubnetContainerController.cs" />
     <Compile Include="DomainModel\Models\LogInfo.cs" />
     <Compile Include="DomainModel\Models\ValidationLog.cs" />

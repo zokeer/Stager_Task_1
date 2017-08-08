@@ -38,9 +38,9 @@ namespace Task_1.ASMX
         /// </summary>
         /// <returns>Сериализованное представление массива Subnet.</returns>
         [WebMethod(Description = "Получить массив подсетей.")]
-        public SeriablizableSubnet[] Get()
+        public List<Subnet> Get()
         {
-            return SubnetSerializer.SerializeList(_subnetContainerManager.Get());
+            return _subnetContainerManager.Get();
         }
 
         /// <summary>
@@ -111,14 +111,11 @@ namespace Task_1.ASMX
         /// значение - список подсетей, которые покрывает подсеть-ключ.
         /// </returns>
         [WebMethod(Description = "Получить минимальное покрытие подсетей.")]
-        public Dictionary<SeriablizableSubnet, SeriablizableSubnet[]> GetCoverage()
+        public Dictionary<Subnet, List<Subnet>> GetCoverage()
         {
-            return SubnetSerializer.SerializeDictionary(
-                SubnetCoverageManager.GetMinimalCoverage(
-                    _subnetContainerManager.Get()
-                )
+            return SubnetCoverageManager.GetMinimalCoverage(
+                _subnetContainerManager.Get()
             );
-
         }
     }
 }

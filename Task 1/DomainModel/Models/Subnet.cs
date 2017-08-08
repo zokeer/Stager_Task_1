@@ -7,6 +7,7 @@ namespace DomainModel.Models
     /// <summary>
     /// Класс представления подсетей.
     /// </summary>
+    [Serializable]
     public class Subnet : IComparable
     {
         public string Id { get; }
@@ -36,7 +37,12 @@ namespace DomainModel.Models
             Id = id;
             Network = IPNetwork.Parse(raw_subnet);
         }
-        
+        /// <summary>
+        /// Приватный конструктор нужен для сериализации.
+        /// </summary>
+        private Subnet()
+        { }
+
         public override int GetHashCode()
         {
             return Id.GetHashCode();
