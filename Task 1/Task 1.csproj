@@ -247,7 +247,6 @@
       <DependentUpon>SubnetContainerWebService.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controllers\SubnetApiController.cs" />
     <Compile Include="Controllers\SubnetContainerController.cs" />
     <Compile Include="DomainModel\Models\LogInfo.cs" />
     <Compile Include="DomainModel\Models\ValidationLog.cs" />
