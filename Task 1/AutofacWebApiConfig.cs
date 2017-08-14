@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Data.Entity;
 using System.IO;
 using System.Reflection;
 using System.Web.Http;
@@ -27,7 +26,6 @@ namespace Task_1
 
         private static IContainer RegisterServices(ContainerBuilder builder)
         {
-            //Register your Web API controllers.  
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
             var file_repository = ConfigurationManager.AppSettings["FileRepositoryPath"];

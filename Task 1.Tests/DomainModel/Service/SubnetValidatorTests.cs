@@ -1,5 +1,4 @@
-﻿using System;
-using DomainModel.Models;
+﻿using DomainModel.Models;
 using DomainModel.Service;
 using NUnit.Framework;
 

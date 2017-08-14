@@ -1,16 +1,8 @@
-﻿using System;
-using System.Configuration;
-using System.IO;
-using System.Reflection;
-using System.Web;
+﻿using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Autofac;
-using Autofac.Integration.WebApi;
-using DomainModel.Repository;
-using Task_1.Controllers;
 
 namespace Task_1
 {
