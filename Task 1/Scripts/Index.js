@@ -2,8 +2,12 @@
     var table = $("#subnetTable").DataTable({
         "processing": true,
         "ajax": {
-            "url": "/SubnetApiController/Get",
-            "type": "GET"
+            "url": "/api/SubnetApi/Get",
+            "type": "GET",
+            "dataSrc": function (json) {
+                console.log(json);
+                return json;
+            }
         },
         "columns": [
             {
@@ -12,7 +16,7 @@
             },
             {
                 "type": "string",
-                "data": "Network"
+                "data": "MaskedAddress"
             }
         ],
         "columnDefs": [
@@ -27,7 +31,7 @@
                 "defaultContent": "<button id='editButton'>Изменить</button>"
             }
         ],
-        "order": [],
+        "order": []
     });
 
     $("#subnetTable tbody").on("click",
@@ -35,8 +39,8 @@
         function() {
             var data = table.row($(this).parents('tr')).data();
             if (confirm("Вы точно хотите удалить подсеть с идентификатором: " + data.Id + "?")) {
-                $.post("/SubnetContainer/DeleteSubnet",
-                    { id: data.Id },
+                $.post("/api/SubnetApi/DeleteSubnet",
+                    "=" + data.Id,
                     function(data) {
                         $('#log_label').text(data);
                         table.ajax.reload();
@@ -58,13 +62,13 @@
                 if (confirm("Вы точно хотите изменить подсеть с идентификатором: " + data.Id +
                     "\nНа подсеть: " + $("#edit_id").val() + ", " + $("#edit_address").val()
                     + "/" + $("#edit_mask").val())) {
-                    $.post("/SubnetContainer/EditSubnet",
-                        {
+                    $.post("/api/SubnetApi/EditSubnet",
+                        "=" + JSON.stringify({
                             old_id: data.Id,
                             new_id: $("#edit_id").val(),
                             address: $("#edit_address").val(),
                             mask: $("#edit_mask").val()
-                        },
+                        }),
                         function(data) {
                             $("#log_label").text(data);
                             $("#editModal").css("display", "none");
@@ -75,23 +79,28 @@
         });
 
     $("#submit_new_subnet").click(function() {
-        $.post("/SubnetContainer/CreateSubnet",
-            {
-                id: $("#new_id").val(),
-                address: $("#new_address").val(),
-                mask: $("#new_mask").val()
-            }, function (data) {
-                console.info(typeof data);
+        $.post("/api/SubnetApi/CreateSubnet",
+            "=" +
+            JSON.stringify({
+                "id": $("#new_id").val(),
+                "address": $("#new_address").val(),
+                "mask": $("#new_mask").val()
+            }),
+            function(data) {
                 $("#log_label").text(data);
                 table.ajax.reload();
-         });
+            });
     });
 
     var coverage_table = $("#coverageTable").DataTable({
         "processing": true,
         "ajax": {
-            "url": "/SubnetContainer/GetCoverage",
-            "type": "GET"
+            "url": "/api/SubnetApi/GetCoverage",
+            "type": "GET",
+            "dataSrc": function (json) {
+                console.log(json);
+                return json;
+            }
         },
         bAutoWidth : false,
         "columns": [
