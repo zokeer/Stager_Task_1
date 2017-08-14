@@ -40,7 +40,7 @@
             var data = table.row($(this).parents('tr')).data();
             if (confirm("Вы точно хотите удалить подсеть с идентификатором: " + data.Id + "?")) {
                 $.post("/api/SubnetApi/DeleteSubnet",
-                    { id: data.Id },
+                    "=" + data.Id,
                     function(data) {
                         $('#log_label').text(data);
                         table.ajax.reload();
@@ -63,12 +63,12 @@
                     "\nНа подсеть: " + $("#edit_id").val() + ", " + $("#edit_address").val()
                     + "/" + $("#edit_mask").val())) {
                     $.post("/api/SubnetApi/EditSubnet",
-                        {
+                        "=" + JSON.stringify({
                             old_id: data.Id,
                             new_id: $("#edit_id").val(),
                             address: $("#edit_address").val(),
                             mask: $("#edit_mask").val()
-                        },
+                        }),
                         function(data) {
                             $("#log_label").text(data);
                             $("#editModal").css("display", "none");
@@ -80,13 +80,13 @@
 
     $("#submit_new_subnet").click(function() {
         $.post("/api/SubnetApi/CreateSubnet",
+            "=" +
             JSON.stringify({
-                id: $("#new_id").val(),
-                address: $("#new_address").val(),
-                mask: $("#new_mask").val()
+                "id": $("#new_id").val(),
+                "address": $("#new_address").val(),
+                "mask": $("#new_mask").val()
             }),
             function(data) {
-                console.info(typeof data);
                 $("#log_label").text(data);
                 table.ajax.reload();
             });
