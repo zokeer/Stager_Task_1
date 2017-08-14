@@ -25,6 +25,10 @@ namespace DomainModel.Models
             LogInfo = log_info;
         }
 
+        private ValidationLog()
+        {
+        }
+
         public override string ToString()
         {
             var result = new StringBuilder();

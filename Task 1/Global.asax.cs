@@ -23,7 +23,7 @@ namespace Task_1
                 .AsImplementedInterfaces()
                 .SingleInstance();
 
-            builder.RegisterType<SubnetContainerController>()
+            builder.RegisterType<SubnetApiController>()
                 .AsSelf();
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));

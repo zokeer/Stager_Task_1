@@ -2,7 +2,7 @@
     var table = $("#subnetTable").DataTable({
         "processing": true,
         "ajax": {
-            "url": "/SubnetContainer/Get",
+            "url": "/SubnetApiController/Get",
             "type": "GET"
         },
         "columns": [
@@ -12,7 +12,7 @@
             },
             {
                 "type": "string",
-                "data": "MaskedAddress"
+                "data": "Network"
             }
         ],
         "columnDefs": [

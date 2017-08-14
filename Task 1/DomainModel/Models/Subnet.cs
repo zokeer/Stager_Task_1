@@ -37,6 +37,7 @@ namespace DomainModel.Models
             Id = id;
             Network = IPNetwork.Parse(raw_subnet);
         }
+
         /// <summary>
         /// Приватный конструктор нужен для сериализации.
         /// </summary>
