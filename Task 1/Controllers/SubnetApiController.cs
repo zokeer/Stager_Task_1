@@ -44,8 +44,7 @@ namespace Task_1.Controllers
             IEnumerable<object> masked_subnets = subnets.Select((subnet, index) => new
             {
                 subnet.Id,
-                MaskedAddress = _normalizeSubnetName(subnet.Network.Network.ToString(),
-                    subnet.Network.Cidr.ToString()),
+                MaskedAddress = _normalizeSubnetName(subnet.Address, subnet.Mask),
                 DT_RowId = subnet.Id
 
             });
@@ -138,8 +137,7 @@ namespace Task_1.Controllers
                 json_acceptable_list.Add(new
                 {
                     KeyId = key.Id,
-                    KeyMaskedAddress = _normalizeSubnetName(key.Network.Network.ToString(),
-                        key.Network.Cidr.ToString()),
+                    KeyMaskedAddress = _normalizeSubnetName(key.Address, key.Mask),
                     Children = coverage[key].Select(subnet => subnet.Id)
                 });
             }

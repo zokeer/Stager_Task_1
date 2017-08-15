@@ -51,7 +51,7 @@ namespace DomainModel.Repository
             {
                 File.WriteAllText(_repositoryPath,
                     JsonConvert.SerializeObject(
-                        _subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}"))
+                        _subnets.Select(subnet => $"{subnet.Id},{subnet.Address}/{subnet.Mask}"))
                 );
             }
             catch (Newtonsoft.Json.JsonSerializationException)
@@ -78,7 +78,7 @@ namespace DomainModel.Repository
             {
                 File.WriteAllText(_repositoryPath,
                     JsonConvert.SerializeObject(
-                        _subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}"))
+                        _subnets.Select(subnet => $"{subnet.Id},{subnet.Address}/{subnet.Mask}"))
                 );
             }
             catch (Newtonsoft.Json.JsonSerializationException)

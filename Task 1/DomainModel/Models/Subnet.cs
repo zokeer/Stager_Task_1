@@ -10,8 +10,11 @@ namespace DomainModel.Models
     [Serializable]
     public class Subnet : IComparable
     {
-        public string Id { get; }
-        public IPNetwork Network { get; }
+        public string Id { get; set; }
+        public string Address { get; set; }
+        public string Mask { get; set; }
+
+        private readonly IPNetwork _network;
 
         private readonly string _errorMessage = @"{0} и {1} не корректные данные для создания Subnet.
                                                    Идентификатор должен быть длины не более 255 символов,
@@ -34,20 +37,24 @@ namespace DomainModel.Models
             id = id.Trim();
             if (!IsValidArguments(id, raw_subnet))
                 throw new ArgumentException(string.Format(_errorMessage, id, raw_subnet));
+
             Id = id;
-            Network = IPNetwork.Parse(raw_subnet);
+            _network = IPNetwork.Parse(raw_subnet);
+            Address = _network.Network.ToString();
+            Mask = _network.Cidr.ToString();
         }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
 
         /// <summary>
         /// Приватный конструктор нужен для сериализации.
         /// </summary>
         private Subnet()
         { }
-
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
 
         /// <summary>
         /// Subnet равна другой Subnet если у них одинаковый ID и Маскированный Адрес Сети.
@@ -59,7 +66,7 @@ namespace DomainModel.Models
             var other_subnet = other as Subnet;
             if (other_subnet == null)
                 return false;
-            return Id == other_subnet.Id && Network == other_subnet.Network;
+            return Id == other_subnet.Id && _network == other_subnet._network;
         }
 
         /// <summary>
@@ -75,7 +82,7 @@ namespace DomainModel.Models
                                                                             экземпляр класса Subnet,
                                                                             но был получен null");
 
-            return IPNetwork.Contains(Network, candidate_subnet.Network);
+            return IPNetwork.Contains(_network, candidate_subnet._network);
         }
 
         /// <summary>

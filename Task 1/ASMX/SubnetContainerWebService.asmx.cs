@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Http;
+using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
+using System.Xml;
 using DomainModel.Models;
 using DomainModel.Repository;
 using DomainModel.Service;
@@ -17,8 +20,8 @@ namespace Task_1.ASMX
     /// </summary>
     [WebService(Namespace = "http://tempuri.org/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+    [System.ComponentModel.ToolboxItem(false)]
     [ScriptService]
-    [GenerateScriptType(typeof(Subnet))]
     public class SubnetContainerWebService : WebService
     {
         /// <summary>
@@ -59,18 +62,23 @@ namespace Task_1.ASMX
         /// Вызывает у сервиса подсетей создание новой подсети.
         /// </summary>
         /// <param name="id">ID новой подсети.</param>
-        /// <param name="raw_subnet">Строковое представление подсети.</param>
+        /// <param name="address">Строковое представление адреса подсети.</param>
+        /// <param name="mask">Маска подсети.</param>
         /// <returns> Информация об успехе операции создания.</returns>
-        [WebMethod(Description = "Добавить Подсеть."), ScriptMethod(UseHttpGet = true)]
-        public string Create(string id, string raw_subnet)
+        [WebMethod(Description = "Добавить Подсеть.")]
+        [ScriptMethod]
+        public string Create(string id, string address, string mask)
         {
+            if (mask == null)
+                throw new ArgumentNullException(nameof(mask), "Маска подсети должна быть числом от 0 до 32, но был получен null.");
             if (id.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(id), "Идентификатор новой подсети не может быть null.");
-            if (raw_subnet.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(raw_subnet), @"Аргумент должен быть маскированным
+            if (address.IsNullOrWhiteSpace())
+                throw new ArgumentNullException(nameof(address), @"Аргумент должен быть маскированным
                                                                     адресом подсети, но был получен null.");
 
-            return _subnetContainerManager.Create(id, raw_subnet).ToString();
+            return _subnetContainerManager.Create(id, _normalizeSubnetName(address, mask)).ToString();
+
         }
 
         /// <summary>
@@ -80,13 +88,13 @@ namespace Task_1.ASMX
         /// <returns> Информация об успехе операции удаления.</returns>
         [WebMethod(Description = "Удалить Подсеть.")]
         [ScriptMethod]
-        public ValidationLog Delete(string id)
+        public string Delete(string id)
         {
             if (id.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(id), @"Идентификатор подсети, которую нужно удалить не может быть null.
                                                               Выберите существующий идентификатор подсети.");
 
-            return _subnetContainerManager.Delete(id);
+            return _subnetContainerManager.Delete(id).ToString();
         }
 
         /// <summary>
@@ -98,7 +106,7 @@ namespace Task_1.ASMX
         /// <returns> Информация об успехе операции изменения.</returns>
         [WebMethod(Description = "Изменить Подсеть.")]
         [ScriptMethod]
-        public ValidationLog Edit(string old_id, string new_id, string raw_subnet)
+        public string Edit(string old_id, string new_id, string raw_subnet)
         {
             if (old_id.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(old_id), @"Идентификатор подсети, которую нужно изменить
@@ -112,7 +120,7 @@ namespace Task_1.ASMX
                 throw new ArgumentNullException(nameof(raw_subnet), @"Аргумент должен быть маскированным
                                                                     адресом подсети, но был получен null.");
 
-            return _subnetContainerManager.Edit(old_id, new_id, raw_subnet);
+            return _subnetContainerManager.Edit(old_id, new_id, raw_subnet).ToString();
         }
 
         ///// <summary>

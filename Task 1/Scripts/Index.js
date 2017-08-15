@@ -119,13 +119,100 @@
 }
 
 var asmx_func = function() {
-    $.post("../ASMX/SubnetContainerWebService.asmx/Create",
-        {
-            "id": "KEKEKEK",
-            "raw_subnet": "ULTRAKEK"
-        },
-        function (data) {
-            console.info(data);
+
+    var sync_func = function() {
+        $.get("../ASMX/SubnetContainerWebService.asmx/Get",
+            function(response) {
+                var subnets = response.childNodes[0].children;
+                $("#subnetTable tbody").remove();
+                $("#subnetTable").append("<tbody></tbody>");
+                for (var i = 0; i < subnets.length; i++) {
+                    $("#subnetTable > tbody").append("<tr>" +
+                        "<td>" +
+                        subnets[i].children[0].textContent +
+                        "</td>" +
+                        "<td>" +
+                        subnets[i].children[1].textContent +
+                        "/" +
+                        subnets[i].children[2].textContent +
+                        "</td>" +
+                        "<td>" +
+                        "<button class='deleteButton'>Удалить</button>" +
+                        "</td>" +
+                        "<td>" +
+                        "<button class='editButton'>Изменить</button>" +
+                        "</td>" +
+                        "</tr>");
+                }
+            });
+    }
+
+    sync_func();
+
+    $("#submit_new_subnet").click(function() {
+        $.post("../ASMX/SubnetContainerWebService.asmx/Create",
+            {
+                "id": $("#new_id").val(),
+                "address": $("#new_address").val(),
+                "mask": $("#new_mask").val()
+            },
+            function(response) {
+                $("#log_label").text(response.childNodes[0].childNodes[0].data);
+                sync_func();
+            });
+    });
+
+    $("#subnetTable tbody").on("click",
+        ".deleteButton",
+        function() {
+            console.log("IN DELETE");
+            var data = table.row($(this).parents('tr')).data();
+            if (confirm("Вы точно хотите удалить подсеть с идентификатором: " + data.Id + "?")) {
+                $.post("../ASMX/SubnetContainerWebService.asmx/Delete",
+                    {
+                        "id": $("#new_id").val()
+                    },
+                    function(response) {
+                        $("#log_label").text(response.childNodes[0].childNodes[0].data);
+                        sync_func();
+                    });
+            }
+        });
+        
+
+    $("#subnetTable tbody").on("click",
+        ".editButton",
+        function() {
+            var data = table.row($(this).parents("tr")).data();
+            $("#editModal").css("display", "flex");
+            $("#editModal").click(function(event) {
+                if (event.target == $("#editModal")[0]) {
+                    $("#editModal").css("display", "none");
+                }
+            });
+            $("#submit_editted_subnet").click(function() {
+                if (confirm("Вы точно хотите изменить подсеть с идентификатором: " +
+                    data.Id +
+                    "\nНа подсеть: " +
+                    $("#edit_id").val() +
+                    ", " +
+                    $("#edit_address").val() +
+                    "/" +
+                    $("#edit_mask").val())) {
+                    $.post("../ASMX/SubnetContainerWebService.asmx/Edit",
+                        {
+                            old_id: data.Id,
+                            new_id: $("#edit_id").val(),
+                            address: $("#edit_address").val(),
+                            mask: $("#edit_mask").val()
+                        },
+                        function(response) {
+                            $("#log_label").text(response.childNodes[0].childNodes[0].data);
+                            $("#editModal").css("display", "none");
+                            sync_func();
+                        });
+                }
+            });
         });
 }
 
