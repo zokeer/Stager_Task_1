@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Net.Http;
-using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
-using System.Xml;
 using DomainModel.Models;
 using DomainModel.Repository;
 using DomainModel.Service;
 using Microsoft.Ajax.Utilities;
-using Newtonsoft.Json;
 
 namespace Task_1.ASMX
 {
@@ -54,7 +50,7 @@ namespace Task_1.ASMX
         /// <returns>Сериализованное представление массива Subnet.</returns>
         [WebMethod(Description = "Получить Список Подсетей."), ScriptMethod(UseHttpGet = true)]
         public List<Subnet> Get()
-        { 
+        {
             return _subnetContainerManager.Get();
         }
 
@@ -70,7 +66,8 @@ namespace Task_1.ASMX
         public string Create(string id, string address, string mask)
         {
             if (mask == null)
-                throw new ArgumentNullException(nameof(mask), "Маска подсети должна быть числом от 0 до 32, но был получен null.");
+                throw new ArgumentNullException(nameof(mask),
+                    "Маска подсети должна быть числом от 0 до 32, но был получен null.");
             if (id.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(id), "Идентификатор новой подсети не может быть null.");
             if (address.IsNullOrWhiteSpace())
@@ -91,7 +88,8 @@ namespace Task_1.ASMX
         public string Delete(string id)
         {
             if (id.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(id), @"Идентификатор подсети, которую нужно удалить не может быть null.
+                throw new ArgumentNullException(nameof(id),
+                    @"Идентификатор подсети, которую нужно удалить не может быть null.
                                                               Выберите существующий идентификатор подсети.");
 
             return _subnetContainerManager.Delete(id).ToString();
@@ -102,11 +100,12 @@ namespace Task_1.ASMX
         /// </summary>
         /// <param name="old_id">ID той сети, чьи параметры нужно изменить.</param>
         /// <param name="new_id">ID новой подсети.</param>
-        /// <param name="raw_subnet">Строковое представление подсети.</param>
+        /// <param name="address">Строковое представление адреса подсети.</param>
+        /// <param name="mask">Маска подсети.</param>
         /// <returns> Информация об успехе операции изменения.</returns>
         [WebMethod(Description = "Изменить Подсеть.")]
         [ScriptMethod]
-        public string Edit(string old_id, string new_id, string raw_subnet)
+        public string Edit(string old_id, string new_id, string address, string mask)
         {
             if (old_id.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(old_id), @"Идентификатор подсети, которую нужно изменить
@@ -116,29 +115,37 @@ namespace Task_1.ASMX
                 throw new ArgumentNullException(nameof(new_id), @"Новый идентификатор подсети не может быть null.
                                                                  Это либо новый уникальный идентификатор,
                                                                  либо тот, который изменяется.");
-            if (raw_subnet.IsNullOrWhiteSpace())
-                throw new ArgumentNullException(nameof(raw_subnet), @"Аргумент должен быть маскированным
-                                                                    адресом подсети, но был получен null.");
+            if (address.IsNullOrWhiteSpace())
+                throw new ArgumentNullException(nameof(address), @"Аргумент должен быть маскированным
+                                                                   адресом подсети, но был получен null.");
+            if (mask == null)
+                throw new ArgumentNullException(nameof(mask), @"Маска подсети должна быть числом от 0 до 32,
+                                                                но был получен null.");
 
-            return _subnetContainerManager.Edit(old_id, new_id, raw_subnet).ToString();
+            return _subnetContainerManager.Edit(old_id, new_id, _normalizeSubnetName(address, mask)).ToString();
         }
 
-        ///// <summary>
-        ///// Вызывает у SubnetCoverageManager метод создания минимального покрытия подсетей,
-        ///// которые предоставляет сервис подсетей.
-        ///// </summary>
-        ///// <returns>
-        ///// Словарь минимального покрытия, устроенный по принципу:
-        ///// ключ - покрывающая подсеть
-        ///// значение - список подсетей, которые покрывает подсеть-ключ.
-        ///// </returns>
-        //[WebMethod(Description = "Получить минимальное покрытие подсетей.")]
-        //public Dictionary<Subnet, List<Subnet>> GetCoverage()
-        //{
-        //    return SubnetCoverageManager.GetMinimalCoverage(
-        //        _subnetContainerManager.Get()
-        //    );
-        //}
+        /// <summary>
+        /// Вызывает у SubnetCoverageManager метод создания минимального покрытия подсетей,
+        /// которые предоставляет сервис подсетей.
+        /// </summary>
+        /// <returns>
+        /// Массив типа "ключ-значение", отображающий минимальное покрытие, устроенный по принципу:
+        /// ключ - покрывающая подсеть
+        /// значение - список подсетей, которые покрывает подсеть-ключ.
+        /// </returns>
+        [WebMethod(Description = "Получить минимальное покрытие подсетей.")]
+        [ScriptMethod]
+        public KVPair<Subnet, List<Subnet>>[] GetCoverage()
+        {
+
+            return SubnetCoverageManager.GetMinimalCoverage(_subnetContainerManager.Get())
+                .Select(k =>
+                    new KVPair<Subnet, List<Subnet>>() { Key = k.Key, Value = k.Value}
+                )
+                .ToArray();
+        }
+
     }
 }
 

@@ -256,6 +256,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Controllers\SubnetApiController.cs" />
     <Compile Include="Controllers\SubnetContainerController.cs" />
+    <Compile Include="DomainModel\Models\KVPair.cs" />
     <Compile Include="DomainModel\Models\LogInfo.cs" />
     <Compile Include="DomainModel\Models\ValidationLog.cs" />
     <Compile Include="DomainModel\Models\SubnetField.cs" />

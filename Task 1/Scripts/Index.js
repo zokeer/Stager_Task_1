@@ -145,6 +145,38 @@ var asmx_func = function() {
                         "</tr>");
                 }
             });
+
+        $.get("../ASMX/SubnetContainerWebService.asmx/GetCoverage",
+            function(response) {
+                var subnets = response.childNodes[0].children;
+                $("#coverageTable tbody").remove();
+                $("#coverageTable").append("<tbody></tbody>");
+                for (var i = 0; i < subnets.length; i++) {
+                    var key = subnets[i].getElementsByTagName("Key")[0];
+                    var value = subnets[i].getElementsByTagName("Value")[0];
+                    var covered_subnets = value.getElementsByTagName("Subnet");
+                    var array_ids = "";
+                    console.info(covered_subnets);
+                    for (var j = 0; j < covered_subnets.length; j++) {
+                        array_ids = array_ids + covered_subnets[j].getElementsByTagName("Id")[0].textContent + ", ";
+                    }
+                    console.info(array_ids);
+                    $("#coverageTable > tbody").append("<tr>" +
+                        "<td>" +
+                        key.children[0].textContent +
+                        "</td>" +
+                        "<td>" +
+                        key.children[1].textContent +
+                        "/" +
+                        key.children[2].textContent +
+                        "</td>" +
+                        "<td>" +
+                        array_ids +
+                        "</td>" +
+                        "</tr>");
+                }
+            }
+        );
     }
 
     sync_func();
@@ -162,15 +194,15 @@ var asmx_func = function() {
             });
     });
 
-    $("#subnetTable tbody").on("click",
+    $("#subnetTable").on("click",
         ".deleteButton",
         function() {
-            console.log("IN DELETE");
-            var data = table.row($(this).parents('tr')).data();
-            if (confirm("Вы точно хотите удалить подсеть с идентификатором: " + data.Id + "?")) {
+            var data = $(this).parents("tr")[0];
+            var id = data.children[0].textContent;
+            if (confirm("Вы точно хотите удалить подсеть с идентификатором: " + id + "?")) {
                 $.post("../ASMX/SubnetContainerWebService.asmx/Delete",
                     {
-                        "id": $("#new_id").val()
+                        "id": id
                     },
                     function(response) {
                         $("#log_label").text(response.childNodes[0].childNodes[0].data);
@@ -178,12 +210,13 @@ var asmx_func = function() {
                     });
             }
         });
-        
 
-    $("#subnetTable tbody").on("click",
+
+    $("#subnetTable").on("click",
         ".editButton",
         function() {
-            var data = table.row($(this).parents("tr")).data();
+            var data = $(this).parents("tr")[0];
+            var old_id = data.children[0].textContent;
             $("#editModal").css("display", "flex");
             $("#editModal").click(function(event) {
                 if (event.target == $("#editModal")[0]) {
@@ -192,7 +225,7 @@ var asmx_func = function() {
             });
             $("#submit_editted_subnet").click(function() {
                 if (confirm("Вы точно хотите изменить подсеть с идентификатором: " +
-                    data.Id +
+                    old_id +
                     "\nНа подсеть: " +
                     $("#edit_id").val() +
                     ", " +
@@ -201,7 +234,7 @@ var asmx_func = function() {
                     $("#edit_mask").val())) {
                     $.post("../ASMX/SubnetContainerWebService.asmx/Edit",
                         {
-                            old_id: data.Id,
+                            old_id: old_id,
                             new_id: $("#edit_id").val(),
                             address: $("#edit_address").val(),
                             mask: $("#edit_mask").val()
@@ -214,6 +247,10 @@ var asmx_func = function() {
                 }
             });
         });
+
+    $("#getCoverage").click(function() {
+        $("#coverage_table_wrapper").css("display", "block");
+    });
 }
 
 $(document).ready(asmx_func);

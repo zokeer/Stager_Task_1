@@ -15,7 +15,7 @@ namespace Task_1.Models.Tests
             var subnet = new Subnet("id", "0.0.0.0/24");
 
             Assert.AreEqual(subnet.Id, "id");
-            Assert.AreEqual(IPNetwork.Parse("0.0.0.0/24"), subnet.Network);
+            Assert.AreEqual("0.0.0.0/24", $"{subnet.Address}/{subnet.Mask}");
         }
 
         [Test]
