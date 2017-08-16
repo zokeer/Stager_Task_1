@@ -1,4 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Text;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using LukeSkywalker.IPNetwork;
 using static DomainModel.Service.SubnetValidator;
 
@@ -111,6 +115,19 @@ namespace DomainModel.Models
             return IsValidMask(raw_subnet).LogInfo == LogInfo.NoErrors &&
                    IsValidAddress(raw_subnet).LogInfo == LogInfo.NoErrors &&
                    IsValidId(id).LogInfo == LogInfo.NoErrors;
+        }
+
+        public XElement ToXElement()
+        {
+            using (var memory_stream = new MemoryStream())
+            {
+                using (TextWriter stream_writer = new StreamWriter(memory_stream))
+                {
+                    var xml_serializer = new XmlSerializer(typeof(Subnet));
+                    xml_serializer.Serialize(stream_writer, this);
+                    return XElement.Parse(Encoding.UTF8.GetString(memory_stream.ToArray()));
+                }
+            }
         }
     }
 }

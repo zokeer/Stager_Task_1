@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.Script.Services;
 using System.Web.Services;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using DomainModel.Models;
 using DomainModel.Repository;
 using DomainModel.Service;
@@ -49,9 +54,9 @@ namespace Task_1.ASMX
         /// </summary>
         /// <returns>Сериализованное представление массива Subnet.</returns>
         [WebMethod(Description = "Получить Список Подсетей."), ScriptMethod(UseHttpGet = true)]
-        public List<Subnet> Get()
+        public XElement Get()
         {
-            return _subnetContainerManager.Get();
+            return new XElement("Subnets", _subnetContainerManager.Get().Select(s => s.ToXElement()));
         }
 
         /// <summary>
@@ -62,7 +67,7 @@ namespace Task_1.ASMX
         /// <param name="mask">Маска подсети.</param>
         /// <returns> Информация об успехе операции создания.</returns>
         [WebMethod(Description = "Добавить Подсеть.")]
-        [ScriptMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Xml)]
         public string Create(string id, string address, string mask)
         {
             if (mask == null)
@@ -145,7 +150,7 @@ namespace Task_1.ASMX
                 )
                 .ToArray();
         }
-
+        
     }
 }
 
