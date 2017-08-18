@@ -41,11 +41,11 @@ namespace Task_1.ASMX
         /// </summary>
         public SubnetContainerWebService()
         {
+            var file_repository = ConfigurationManager.AppSettings["FileRepositoryPath"];
+            var full_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, file_repository);
             _normalizeSubnetName = (address, mask) => $"{address}/{mask}";
             _subnetContainerManager = new SubnetContainerManager(
-                new DBRepository(
-                    ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()
-                )
+                new FileRepository(full_path)
             );
         }
 

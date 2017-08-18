@@ -126,19 +126,21 @@ var asmx_func = function () {
         // Заполнение таблицы подсетей. Обращается к ASMX и парсит полученные данные.
         $.get("../ASMX/SubnetContainerWebService.asmx/Get",
             function(response) {
-                var nodes = response.evaluate("/Subnets//Subnet", response, null, XPathResult.ANY_TYPE, null);
-                var subnet = nodes.iterateNext();
+                var ids = response.evaluate("/Subnets/Subnet//Id", response, null, XPathResult.ANY_TYPE, null);
+                var addresses = response.evaluate("/Subnets/Subnet//Address", response, null, XPathResult.ANY_TYPE, null);
+                var masks = response.evaluate("/Subnets/Subnet//Mask", response, null, XPathResult.ANY_TYPE, null);
+                var id = ids.iterateNext();
                 $("#subnetTable tbody").remove();
                 $("#subnetTable").append("<tbody></tbody>");
-                while (subnet) {
+                while (id) {
                     $("#subnetTable > tbody").append("<tr>" +
                         "<td>" +
-                        subnet.childNodes[1].textContent +
+                        id.textContent +
                         "</td>" +
                         "<td>" +
-                        subnet.childNodes[3].textContent +
+                        addresses.iterateNext().textContent +
                         "/" +
-                        subnet.childNodes[5].textContent +
+                        masks.iterateNext().textContent +
                         "</td>" +
                         "<td>" +
                         "<button class='deleteButton'>Удалить</button>" +
@@ -147,7 +149,7 @@ var asmx_func = function () {
                         "<button class='editButton'>Изменить</button>" +
                         "</td>" +
                         "</tr>");
-                    subnet = nodes.iterateNext();
+                    id = ids.iterateNext();
                 };
             });
 
