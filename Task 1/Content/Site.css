@@ -77,3 +77,22 @@ button {
 #getCoverage {
     clear: both;
 }
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15px;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+    width: 25%
+}
+
+tr:nth-child(even){background-color: #f2f2f2}

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Net;
 using DomainModel.Models;
-using LukeSkywalker.IPNetwork;
 using DomainModel.Repository;
-using Microsoft.Owin.Security.Provider;
+using Microsoft.Ajax.Utilities;
 
 namespace DomainModel.Service
 {
@@ -20,12 +19,14 @@ namespace DomainModel.Service
         /// <returns>Информация о прохождении операции.</returns>
         public static ValidationLog IsValidAddress(string raw_subnet)
         {
-            if (raw_subnet == null)
+            if (raw_subnet.IsNullOrWhiteSpace())
                 return new ValidationLog(SubnetField.Address, LogInfo.Invalid);
+
             IPAddress test_address;
             var raw_address = raw_subnet.Split('/')[0];
             if (string.IsNullOrEmpty(raw_address) || raw_address.Length > 15)
                 return new ValidationLog(SubnetField.Address, LogInfo.Invalid);
+
             return IPAddress.TryParse(raw_address, out test_address) ? 
                 new ValidationLog(SubnetField.Address, LogInfo.NoErrors) : 
                 new ValidationLog(SubnetField.Address, LogInfo.Invalid);
@@ -39,14 +40,17 @@ namespace DomainModel.Service
         /// <returns>Информация о прохождении операции.</returns>
         public static ValidationLog IsValidMask(string raw_subnet)
         {
-            if (raw_subnet == null)
+            if (raw_subnet.IsNullOrWhiteSpace())
                 return new ValidationLog(SubnetField.Mask, LogInfo.Invalid);
+
             var mask = raw_subnet.Split('/')[1];
             if (string.IsNullOrEmpty(mask) || mask.Length > 2)
                 return new ValidationLog(SubnetField.Mask, LogInfo.Invalid);
+
             int int_mask;
             if (!int.TryParse(mask, out int_mask))
                 return new ValidationLog(SubnetField.Mask, LogInfo.Invalid);
+
             if (int_mask < 0 || int_mask > 32)
                 return new ValidationLog(SubnetField.Mask, LogInfo.Invalid);
             return new ValidationLog(SubnetField.Mask, LogInfo.NoErrors);
@@ -61,10 +65,14 @@ namespace DomainModel.Service
         public static ValidationLog IsValidId(IRepository repository, string id)
         {
             if (repository == null)
-                throw new ArgumentNullException(nameof(repository), "Не может быть null.");
+                throw new ArgumentNullException(nameof(repository), @"Репозиторий данных не может быть null. 
+                                                                     Проверка уникальности id будет производится
+                                                                     на основе данных репозитория.");
+
             var log = IsValidId(id);
             if (log.LogInfo != LogInfo.NoErrors)
                 return log;
+
             return repository.Get().Exists(subnet => subnet.Id == id) ?
                 new ValidationLog(SubnetField.Id, LogInfo.NotUnique) :
                 new ValidationLog(SubnetField.Id, LogInfo.NotExists);
@@ -79,6 +87,7 @@ namespace DomainModel.Service
         {
             if (id.Length <= 255 && !string.IsNullOrEmpty(id))
                 return new ValidationLog(SubnetField.Id, LogInfo.NoErrors);
+
             return new ValidationLog(SubnetField.Id, LogInfo.Invalid);
         }
     }

@@ -12,7 +12,7 @@ namespace Task_1
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "SubnetContainerController", action = "Index", id = UrlParameter.Optional }
+                defaults: new { id = UrlParameter.Optional }
             );
         }
     }

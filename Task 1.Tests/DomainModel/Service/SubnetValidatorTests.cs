@@ -4,10 +4,20 @@ using NUnit.Framework;
 
 namespace Task_1.DomainModel.Service.Tests
 {
+    [Parallelizable]
     [TestFixture]
     public class SubnetValidatorTests
     {
         #region IsValidAddressTests
+
+        [Test]
+        public void IsValidAddress_NullAddress_Fail()
+        {
+            var result = SubnetValidator.IsValidAddress(null);
+
+            Assert.AreEqual(result.LogInfo, LogInfo.Invalid);
+            Assert.AreEqual(result.Field, SubnetField.Address);
+        }
         [Test]
         public void IsValidAddress_RightAddress_Success()
         {
@@ -64,6 +74,15 @@ namespace Task_1.DomainModel.Service.Tests
         }
         #endregion
         #region IsValidMaskTests
+
+        [Test]
+        public void IsValidMask_NullArgument_Fail()
+        {
+            var result = SubnetValidator.IsValidMask(null);
+
+            Assert.AreEqual(result.LogInfo, LogInfo.Invalid);
+            Assert.AreEqual(result.Field, SubnetField.Mask);
+        }
         [Test]
         public void IsValidMask_RightMask_Success()
         {

@@ -33,7 +33,7 @@ namespace DomainModel.Repository
             _repositoryPath = repository_path;
             _subnets = GetDataFromPhysicalSource();
         }
-        
+
         /// <summary>
         /// Записывает в файл и в контейнер новую подсеть в формате Json.
         /// </summary>
@@ -51,7 +51,7 @@ namespace DomainModel.Repository
             {
                 File.WriteAllText(_repositoryPath,
                     JsonConvert.SerializeObject(
-                        _subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}"))
+                        _subnets.Select(subnet => $"{subnet.Id},{subnet.Address}/{subnet.Mask}"))
                 );
             }
             catch (Newtonsoft.Json.JsonSerializationException)
@@ -78,7 +78,7 @@ namespace DomainModel.Repository
             {
                 File.WriteAllText(_repositoryPath,
                     JsonConvert.SerializeObject(
-                        _subnets.Select(subnet => $"{subnet.Id},{subnet.Network.Network}/{subnet.Network.Cidr}"))
+                        _subnets.Select(subnet => $"{subnet.Id},{subnet.Address}/{subnet.Mask}"))
                 );
             }
             catch (Newtonsoft.Json.JsonSerializationException)

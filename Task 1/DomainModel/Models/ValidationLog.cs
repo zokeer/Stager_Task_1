@@ -7,6 +7,7 @@ namespace DomainModel.Models
     /// Класс хранит логирование процесса создания подсети.
     /// Его поля показывают какое поле соотвествует требованиям.
     /// </summary>
+    [Serializable]
     public class ValidationLog
     {
         /// <summary>
@@ -22,6 +23,10 @@ namespace DomainModel.Models
         {
             Field = field;
             LogInfo = log_info;
+        }
+
+        private ValidationLog()
+        {
         }
 
         public override string ToString()

@@ -1,16 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Moq;
-using NUnit.Framework;
+using DomainModel.Models;
 using DomainModel.Repository;
 using DomainModel.Service;
-using DomainModel.Models;
+using Moq;
+using NUnit.Framework;
 
 namespace Task_1.DomainModel.Service.Tests
 {
+    [Parallelizable]
     [TestFixture]
     public class SubnetContainerManagerTests
     {
+        [Test]
+        public void SubnetContainerManager_NullRepository_ThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new SubnetContainerManager(null));
+        }
+
         #region GetTests
         [Test]
         public void GetTest_SameCollections()
@@ -123,6 +131,24 @@ namespace Task_1.DomainModel.Service.Tests
         }
 
         [Test]
+        public void Create_NullId_ThrowsException()
+        {
+            var mock = new Mock<IRepository>();
+            var subnet_container_manager = new SubnetContainerManager(mock.Object);
+
+            Assert.Throws<ArgumentNullException>(() => subnet_container_manager.Create(null, "192.168.168.0/24"));
+        }
+
+        [Test]
+        public void Create_NullSubnet_ThrowsException()
+        {
+            var mock = new Mock<IRepository>();
+            var subnet_container_manager = new SubnetContainerManager(mock.Object);
+
+            Assert.Throws<ArgumentNullException>(() => subnet_container_manager.Create("192.168.168.0/24", null));
+        }
+
+        [Test]
         public void Create_ExistingIdSubnet_RepositoryMethodNotCalled()
         {
             var mock = new Mock<IRepository>();
@@ -186,6 +212,24 @@ namespace Task_1.DomainModel.Service.Tests
             subnet_container_manager.Delete("new_ID");
             mock.Verify(m => m.Delete(It.IsAny<string>()), Times.Once);
         }
+        
+        [Test]
+        public void Delete_NullId_ThrowsException()
+        {
+            var mock = new Mock<IRepository>();
+            var subnet_container_manager = new SubnetContainerManager(mock.Object);
+
+            Assert.Throws<ArgumentNullException>(() => subnet_container_manager.Delete(null));
+        }
+
+        [Test]
+        public void Delete_EmptyId_ThrowsException()
+        {
+            var mock = new Mock<IRepository>();
+            var subnet_container_manager = new SubnetContainerManager(mock.Object);
+
+            Assert.Throws<ArgumentNullException>(() => subnet_container_manager.Delete(""));
+        }
 
         [Test]
         public void Delete_LongId_RepositoryMethodNotCalled()
@@ -196,18 +240,6 @@ namespace Task_1.DomainModel.Service.Tests
             mock.Setup(m => m.Delete(It.IsAny<string>()));
 
             subnet_container_manager.Delete(new string('*', 256));
-            mock.Verify(m => m.Delete(It.IsAny<string>()), Times.Never);
-        }
-
-        [Test]
-        public void Delete_EmptyId_RepositoryMethodNotCalled()
-        {
-            var mock = new Mock<IRepository>();
-            var subnet_container_manager = new SubnetContainerManager(mock.Object);
-            mock.Setup(m => m.Get()).Returns(new List<Subnet> { new Subnet("old_ID", "192.168.168.0/24") });
-            mock.Setup(m => m.Delete(It.IsAny<string>()));
-
-            subnet_container_manager.Delete("");
             mock.Verify(m => m.Delete(It.IsAny<string>()), Times.Never);
         }
         #endregion
@@ -222,6 +254,33 @@ namespace Task_1.DomainModel.Service.Tests
 
             subnet_container_manager.Edit("old_ID", "new_ID", "10.0.0.0/30");
             mock.Verify(m => m.Edit(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+        }
+
+        [Test]
+        public void Edit_NullOldId_ThrowsException()
+        {
+            var mock = new Mock<IRepository>();
+            var subnet_container_manager = new SubnetContainerManager(mock.Object);
+
+            Assert.Throws<ArgumentNullException>(() => subnet_container_manager.Edit(null, "new_ID", "10.0.0.0/30"));
+        }
+
+        [Test]
+        public void Edit_NullNewId_ThrowsException()
+        {
+            var mock = new Mock<IRepository>();
+            var subnet_container_manager = new SubnetContainerManager(mock.Object);
+
+            Assert.Throws<ArgumentNullException>(() => subnet_container_manager.Edit("old_id", null, "10.0.0.0/30"));
+        }
+
+        [Test]
+        public void Edit_NullSubnet_ThrowsException()
+        {
+            var mock = new Mock<IRepository>();
+            var subnet_container_manager = new SubnetContainerManager(mock.Object);
+
+            Assert.Throws<ArgumentNullException>(() => subnet_container_manager.Edit("old_id", "new_ID", null));
         }
 
         [Test]
